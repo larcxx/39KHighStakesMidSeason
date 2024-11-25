@@ -46,8 +46,8 @@ void initialize() {
 	pros::Task screenTask(screen);
 	pros::Task ladyBrownTask(ladyBrown);
 	//pros::Task intakeTask(sort);
-	rs.set_brake_mode_all(pros::MotorBrake::coast);
-	ls.set_brake_mode_all(pros::MotorBrake::coast);
+	rs.set_brake_mode_all(pros::MotorBrake::brake);
+	ls.set_brake_mode_all(pros::MotorBrake::brake);
 	intake.set_brake_mode(pros::MotorBrake::coast);
 	hs.set_brake_mode(pros::MotorBrake::hold);
 	color.set_led_pwm(0);
