@@ -73,7 +73,7 @@ double Base::calcDist(double targetHeading, double currentHeading, turnDir t) {
 }
 
 
-void Base::tankTo(double targetAngle, turnDir t) {
+void Base::tankTo(double targetAngle, bool chain, turnDir t) {
     double currentAngle = 360 - i1.get_heading();
     double tankError = calcDist(targetAngle, currentAngle, t);
     PID tankPID(tankError, tank_kP, tank_kI, tank_kD, tank_integralBound, tank_acceptedError, tank_timeLimit, tank_settledTimeLimit);
@@ -81,7 +81,7 @@ void Base::tankTo(double targetAngle, turnDir t) {
         currentAngle = 360 - i1.get_heading();
 
         tankError = calcDist(targetAngle, currentAngle, shortest);
-        //if(fabs(tankError)<5) break;
+        if(chain && fabs(tankError)<5) break;
 
         double tankOutput = clamp(tankPID.calc(tankError), -tank_maxVolts, tank_maxVolts);
 
