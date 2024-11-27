@@ -87,13 +87,15 @@ void competition_initialize() {}
  */
 void autonomous() {
 
-	rs.set_brake_mode_all(pros::MotorBrake::brake);
-	ls.set_brake_mode_all(pros::MotorBrake::brake);
+	rs.set_brake_mode_all(pros::MotorBrake::coast);
+	ls.set_brake_mode_all(pros::MotorBrake::coast);
+
+	pros::delay(60000);
 	//skills();
 	//blueLeft();
 	//redRight();
 	//redRightElim();
-	blueLeftElim();
+	//blueLeftElim();
 }
 
 /**
@@ -124,10 +126,6 @@ bool clampState = false;
 
 
 void opcontrol() {
-
-	rs.set_brake_mode_all(pros::MotorBrake::coast);
-	ls.set_brake_mode_all(pros::MotorBrake::coast);
-
 
 	while (true) {
 		double left = controller.get_analog(ANALOG_LEFT_Y);    // Gets amount forward/backward from left joystick
