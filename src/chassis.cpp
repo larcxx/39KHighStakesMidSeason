@@ -13,7 +13,7 @@ lemlib::Drivetrain drivetrain(&ls,
 //11.5/2 -4.45
 
 lemlib::TrackingWheel yPod(&yOdomPod, lemlib::Omniwheel::OLD_275, 1.6); // tune this value please
-lemlib::TrackingWheel xPod(&xOdomPod, lemlib::Omniwheel::OLD_275, -2.28);  
+lemlib::TrackingWheel xPod(&xOdomPod, lemlib::Omniwheel::OLD_275, -2.07);  
 
 lemlib::OdomSensors sensors(&yPod, nullptr, &xPod, nullptr, &i1);
 
