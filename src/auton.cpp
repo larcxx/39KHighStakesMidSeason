@@ -159,6 +159,37 @@ void blueLeft(){
     rs.move_voltage(0);
 
 }
+void blueRight(){
+    chassis.setPose(53,24,90);
+    chassis.moveToPose(25,24,90,2000,{.forwards = false,.minSpeed = 50},true);
+    chassis.waitUntil(25);
+    goalClamp.set_value(1);
+    chassis.waitUntilDone();
+    base.tankTo(120, true);
+    setIntakeState(1);
+    chassis.moveToPose(4,55,0,2000,{.forwards = true,.lead=0.80,.maxSpeed =70,.minSpeed = 30},true);
+    base.tankTo(115, true);
+    chassis.moveToPose(36,43,115,2000,{.forwards = true,.lead=0.80,.maxSpeed =80,.minSpeed = 60},true);
+    //add forward backward motion to intake the rings
+    chassis.moveToPose(58,58,45,2000,{.forwards = true,.lead=0.80,.maxSpeed =127,.minSpeed = 65},true);
+    base.tankTo(135, true);
+    
+    chassis.moveToPose(52,2,180,3000,{.forwards = true,.lead=0.80,.maxSpeed =127,.minSpeed = 80},true);
+
+    //lift up the intake while going forward and move lb up
+    base.tankTo(0);
+    //forward 5 inches
+    //scoring the ring with lb
+    //back up a few inches
+    base.tankTo(180);
+
+    ls.move_voltage(11000);
+    rs.move_voltage(11000);
+    pros::delay(500);
+    ls.move_voltage(0);
+    rs.move_voltage(0);
+
+}
 
 void redRight(){
     chassis.setPose(-24,53.25,0);

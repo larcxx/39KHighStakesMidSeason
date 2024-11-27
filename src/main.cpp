@@ -52,7 +52,7 @@ void initialize() {
 	hs.set_brake_mode(pros::MotorBrake::hold);
 	color.set_led_pwm(0);
 	base.setDriveConstants(1.10, 0, 10, 0, 10.4, 1, 3500, 200);
-	base.setTankConstants(0.72, 0.008, 7.2, 7, 4, 3, 3000, 0); // TUNED W/ STL @ 200 
+	base.setTankConstants(0.72, 0.008, 7.2, 7, 12, 3, 3000, 0); // TUNED W/ STL @ 200 
 	base.setPivotConstants(.37, 0, 1, 0, 3, /*LAST 3 VALS DONT MAKE DIFF; NEVER SETTLES */1, 1, 1);
 }
 
@@ -87,13 +87,14 @@ void competition_initialize() {}
  */
 void autonomous() {
 
-	rs.set_brake_mode_all(pros::MotorBrake::coast);
-	ls.set_brake_mode_all(pros::MotorBrake::coast);
+	//rs.set_brake_mode_all(pros::MotorBrake::coast);
+	//ls.set_brake_mode_all(pros::MotorBrake::coast);
 
-	pros::delay(60000);
+	//pros::delay(60000);
 	//skills();
 	//blueLeft();
 	//redRight();
+	blueRight();
 	//redRightElim();
 	//blueLeftElim();
 }
