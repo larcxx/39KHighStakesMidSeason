@@ -106,8 +106,11 @@ void skills(){
 void blueLeft(){
     chassis.setPose(53,-60,270);
     chassis.moveToPose(20,-60,280,2000,{.forwards = true,.lead= .15,.minSpeed = 70},true);
-    base.tankTo(310,true);
+    chassis.waitUntil(48);
     doinker.set_value(1);
+    chassis.waitUntilDone();
+    base.tankTo(310,true);
+    
     pros::delay(2000);
     base.tankTo(0,false);
     chassis.moveToPose(30,-60,270,2000,{.forwards = false,.minSpeed = 90},true);
