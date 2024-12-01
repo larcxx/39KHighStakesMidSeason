@@ -21,3 +21,5 @@ extern pros::adi::DigitalOut goalClamp;
 extern pros::v5::Controller controller;
 
 extern pros::adi::DigitalOut doinker;
+
+extern pros::adi::DigitalOut intakeLift;

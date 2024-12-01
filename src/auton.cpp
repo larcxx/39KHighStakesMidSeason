@@ -104,59 +104,28 @@ void skills(){
 }
 
 void blueLeft(){
-    chassis.setPose(-24,-53.25,180);
-    chassis.moveToPose(-24,-24,180,2000,{.forwards = false,.minSpeed = 60},true);
-    chassis.waitUntil(23);
+    chassis.setPose(53,-60,270);
+    chassis.moveToPose(20,-60,280,2000,{.forwards = true,.lead= .15,.minSpeed = 70},true);
+    base.tankTo(310,true);
+    doinker.set_value(1);
+    pros::delay(2000);
+    base.tankTo(0,false);
+    chassis.moveToPose(30,-60,270,2000,{.forwards = false,.minSpeed = 90},true);
+    doinker.set_value(0);
+    pros::delay(2000);
+
+    base.tankTo(180,false);
+    chassis.moveToPose(25,-60,270,2000,{.forwards = false,.minSpeed = 90},true);
+    pros::delay(2000);
+
     goalClamp.set_value(1);
-    chassis.waitUntilDone();
+    base.tankTo(270,true);
     setIntakeState(1);
-    base.tankTo(270);
-    chassis.moveToPose(-51,-27,270,5000,{.minSpeed = 30},false);
-    pros::delay(800);
-    chassis.moveToPose(-24,-24,270,1500,{.forwards = false, .minSpeed = 50},false);
-    setIntakeState(2);
-    goalClamp.set_value(0);
-    base.tankTo(90);
-    setIntakeState(2);
-    chassis.moveToPose(-48,-24, 60,1300,{.forwards = false, .lead = 0, .minSpeed = 50}, false);
-    base.tankTo(0);
-    chassis.moveToPose(-45.5,-2,180,2000,{.forwards = false, .maxSpeed = 50, .minSpeed = 40}, true);
-    chassis.waitUntil(20);
-    goalClamp.set_value(1);
-    chassis.waitUntilDone();
-    ls.move_voltage(12000);
-    rs.move_voltage(12000);
-    pros::delay(125);
-    base.tankTo(30);
-    chassis.moveToPose(-24,-47,150,3000,{.minSpeed = 70},false);
-    base.tankTo(90);
-    setIntakeState(1);
-    chassis.moveToPose(0,-46,90,1000,{.minSpeed = 40},false);
-    ls.move_voltage(-12000);
-    rs.move_voltage(-12000);
-    pros::delay(100);
-    ls.move_voltage(0);
-    rs.move_voltage(0);
-    base.tankTo(315);
-    setIntakeState(2);
-    pros::delay(500);
-    base.tankTo(90);
-    setIntakeState(1);
-    setMechState(4);
-    chassis.moveToPose(20,-47,90,1200,{.minSpeed = 40},false);
-    
-    base.tankTo(210);
-
-    
+    chassis.moveToPose(25,-50,0,2000,{.forwards = true,.minSpeed = 90},true);
+    base.tankTo(135,true);
+    chassis.moveToPose(60,-65,90,2000,{.forwards = true,.minSpeed = 90},true);
 
 
-    ls.move_voltage(11000);
-    rs.move_voltage(11000);
-    
-    pros::delay(200);
-    pros::delay(300);
-    ls.move_voltage(0);
-    rs.move_voltage(0);
 
 }
 void blueRight(){

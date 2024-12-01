@@ -92,9 +92,9 @@ void autonomous() {
 
 	//pros::delay(60000);
 	//skills();
-	//blueLeft();
+	blueLeft();
 	//redRight();
-	blueRight();
+	//blueRight();
 	//redRightElim();
 	//blueLeftElim();
 }

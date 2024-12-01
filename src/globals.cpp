@@ -8,7 +8,7 @@ pros::v5::MotorGroup ls({-15,-11,-16}, pros::v5::MotorGears::blue); //left back,
 pros::v5::MotorGroup rs({13,12,14}, pros::v5::MotorGears::blue); //right back, right mid, right front
 
 pros::v5::Motor intake(-10, pros::v5::MotorGears::blue); //please change this
-pros::v5::Motor hs(-18,pros::v5::MotorGears::red); // they haven't decided yet
+pros::v5::Motor hs(18,pros::v5::MotorGears::red); // they haven't decided yet
 
 
 pros::v5::IMU i1(20);
@@ -23,3 +23,4 @@ pros::adi::DigitalOut goalClamp('H');
 pros::v5::Controller controller(pros::E_CONTROLLER_MASTER);
 
 pros::adi::DigitalOut doinker('G');
+pros::adi::DigitalOut intakeLift('F');
