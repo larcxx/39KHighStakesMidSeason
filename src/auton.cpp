@@ -104,15 +104,20 @@ void skills(){
 }
 
 void blueLeft(){
-    chassis.setPose(53,-60,270);
-    chassis.moveToPose(20,-60,280,2000,{.forwards = true,.lead= .15,.minSpeed = 70},true);
-    chassis.waitUntil(48);
     doinker.set_value(1);
+
+    /*
+    chassis.setPose(53,-60,270);
+    chassis.moveToPose(20,-60,280,2000,{.lead= .15,.minSpeed = 70},true);
+    chassis.waitUntil(20);
+    goalClamp.set_value(1);
     chassis.waitUntilDone();
-    base.tankTo(310,true);
+    //base.tankTo(310,true);
     
     pros::delay(2000);
-    base.tankTo(0,false);
+    */
+    //base.tankTo(0,false);
+    /*
     chassis.moveToPose(30,-60,270,2000,{.forwards = false,.minSpeed = 90},true);
     doinker.set_value(0);
     pros::delay(2000);
@@ -128,7 +133,7 @@ void blueLeft(){
     base.tankTo(135,true);
     chassis.moveToPose(60,-65,90,2000,{.forwards = true,.minSpeed = 90},true);
 
-
+*/
 
 }
 void blueRight(){
