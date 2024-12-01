@@ -124,6 +124,9 @@ double driveCurve(double input){
 bool clampPrimed = true;
 bool clampState = false;
 
+bool doinkerPrimed = true;
+bool doinkerState = false;
+
 
 
 void opcontrol() {
@@ -154,6 +157,17 @@ void opcontrol() {
 			clampPrimed = true;
 		}
 		
+
+		if(controller.get_digital(DIGITAL_L2) && doinkerPrimed){
+			doinkerState = !doinkerState;
+			
+			doinkerPrimed = false;
+		} 
+		if(!controller.get_digital(DIGITAL_L2)){
+			doinkerPrimed = true;
+		}
+        
+        doinker.set_value(doinkerState);
 
 
 

@@ -127,14 +127,6 @@ void setIntakeState(int state){
 double prevError;
 
 
-
-bool doinkerPrimed = true;
-bool doinkerState = false;
-
-void setDoinkerState(){
-    doinkerState != doinkerState;
-}
-
 void ladyBrown(){
     while(1){
         if(controller.get_digital(DIGITAL_RIGHT) && mechPrimed){
@@ -192,16 +184,7 @@ void ladyBrown(){
 
 
 
-		if(controller.get_digital(DIGITAL_L2) && doinkerPrimed){
-			doinkerState = !doinkerState;
-			
-			doinkerPrimed = false;
-		} 
-		if(!controller.get_digital(DIGITAL_L2)){
-			doinkerPrimed = true;
-		}
 
-        doinker.set_value(doinkerState);
 
 
 
