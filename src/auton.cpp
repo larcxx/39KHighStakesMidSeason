@@ -105,7 +105,7 @@ void skills(){
 
 }
 
-ASSET(swirl_txt);
+
 void blueLeft(){
 
     chassis.setPose(54.75,-60+4.5+5.75,270);
@@ -124,47 +124,18 @@ void blueLeft(){
     chassis.waitUntil(40);
     chassis.waitUntilDone();
 
-    setIntakeState(1);
     doinker.set_value(0);
     pros::delay(250);
 
     base.tankTo(-170);
 
     chassis.moveToPose(25,-46,80,2000,{.forwards = false},true);
-    chassis.waitUntil(17);
+    chassis.waitUntil(19);
     goalClamp.set_value(1);
     chassis.waitUntilDone();
-
-
-    chassis.moveToPose(23.5,-60,270,2000,{.lead=1});
-    goalClamp.set_value(0);
     setIntakeState(1);
-    
-    chassis.moveToPose(23,-46,0,5000,{},true);
-    chassis.waitUntil(40);
-    setIntakeState(0);
-    chassis.waitUntilDone();
-
-    base.tankTo(90);
 
 
-    
-    //base.tankTo(180,false);
-
-    /*
-    pros::delay(2000);
-
-    base.tankTo(180,false);
-    chassis.moveToPose(25,-60,270,2000,{.forwards = false,.minSpeed = 90},true);
-    pros::delay(2000);
-
-    goalClamp.set_value(1);
-    base.tankTo(270,true);
-    setIntakeState(1);
-    chassis.moveToPose(25,-50,0,2000,{.forwards = true,.minSpeed = 90},true);
-    base.tankTo(135,true);
-    chassis.moveToPose(60,-65,90,2000,{.forwards = true,.minSpeed = 90},true);
-    */
 }
 
 void blueRight(){
