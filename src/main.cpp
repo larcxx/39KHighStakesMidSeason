@@ -45,7 +45,7 @@ void initialize() {
 	chassis.calibrate();
 	pros::Task screenTask(screen);
 	pros::Task ladyBrownTask(ladyBrown);
-	//pros::Task intakeTask(sort);
+	pros::Task intakeTask(sort);
 	rs.set_brake_mode_all(pros::MotorBrake::brake);
 	ls.set_brake_mode_all(pros::MotorBrake::brake);
 	intake.set_brake_mode(pros::MotorBrake::coast);
@@ -86,6 +86,7 @@ void competition_initialize() {}
  * from where it left off.
  */
 void autonomous() {
+	setAutonState(true);
 
 	//rs.set_brake_mode_all(pros::MotorBrake::coast);
 	//ls.set_brake_mode_all(pros::MotorBrake::coast);
@@ -130,6 +131,7 @@ bool doinkerState = false;
 
 
 void opcontrol() {
+	setAutonState(false);
 
 	while (true) {
 		double left = controller.get_analog(ANALOG_LEFT_Y);    // Gets amount forward/backward from left joystick

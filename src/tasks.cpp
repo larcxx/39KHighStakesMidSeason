@@ -9,92 +9,17 @@ bool detection = false;
 using namespace std;
 
 
+bool auton = false;
 
-
-
-
-
-
-void sort(){
-    while(true){
-        
-        //--------------------------------------------------------Intake-----------------------------//
-        
-        if(controller.get_digital(DIGITAL_LEFT) && sortPrimed){
-            sortState = (sortState+1)%3;
-            sortPrimed = false;
-        }
-        if(!controller.get_digital(DIGITAL_LEFT)){
-            sortPrimed = true;
-        }
-        
-
-
-
-        if(controller.get_digital(DIGITAL_R2) && !controller.get_digital(DIGITAL_R1)){
-            if(sortState == 0) intake.move_voltage(12000);
-            else if(sortState == 1){
-                if(color.get_hue() > 330 || color.get_hue() <30){
-                    detection = true;
-                }
-            }
-            else if(sortState == 2){
-                if(color.get_hue() > 180 && color.get_hue() <270){
-                    detection = true;
-                }                
-            }
-
-
-
-            if(detection){
-                pros::delay(100);
-                intake.move_voltage(-12000);
-                pros::delay(300);
-                intake.move_voltage(12000);
-                detection = false;
-                pros::delay(400);
-            }
-            else{
-                intake.move_voltage(12000);
-            }
-
-
-
-		}
-		else if(!controller.get_digital(DIGITAL_R2) && controller.get_digital(DIGITAL_R1)){
-			intake.move_voltage(-12000);
-		}
-		else{
-			intake.move_voltage(0);
-		}
-
-
-        //----------------------------------------------------lady brown-------------------------------------//
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        pros::delay(10);
-    }
+void setAutonState(bool value){
+    auton = value;
 }
+
+
+
+
+
+
 
 
 
@@ -102,9 +27,9 @@ int mechState = 0; //0 = normal state, 1 = first ring, 2 = second ring, 3 = ram,
 int prevMechState;
 bool mechPrimed = false;
 
-vector<int> hsStates = {0, 43, 49, 105, 165};
+vector<int> hsStates = {0, 37, 105, 210};
 
-double hs_kP = 0.25;
+double hs_kP = 0.23;
 double hs_kI = 0.00 / 10.0;
 double hs_kD = 0 * 10.0;
 double hs_integralBound = 7;
@@ -127,10 +52,34 @@ void setIntakeState(int state){
 double prevError;
 
 
+void sort(){
+    while(true){
+
+        if((controller.get_digital(DIGITAL_R2) && !controller.get_digital(DIGITAL_R1)) || intakeState == 1){
+			intake.move_voltage(12000);
+		}
+		else if(((!controller.get_digital(DIGITAL_R2) && controller.get_digital(DIGITAL_R1)) || controller.get_digital(DIGITAL_RIGHT)) || intakeState == 2){
+			intake.move_voltage(-12000);
+		}
+        else if(intakeState == 3) intake.move_voltage(3000);
+		else{
+			intake.move_voltage(0);
+		}
+
+        if(intake.get_voltage()>3000 && intake.get_actual_velocity()<6 && auton){
+            intake.move_voltage(-12000);
+            pros::delay(200);
+            intake.move_voltage(12000);
+        }
+
+    }
+}
+
+
 void ladyBrown(){
     while(1){
         if(controller.get_digital(DIGITAL_RIGHT) && mechPrimed){
-            mechState = (mechState+1)%5;
+            mechState = (mechState+1)%4;
             mechPrimed = false;
         }
         if(!controller.get_digital(DIGITAL_RIGHT)){
@@ -154,45 +103,6 @@ void ladyBrown(){
 
         prevError = error;
         prevMechState = mechState;
-
-
-
-
-
-
-        if((controller.get_digital(DIGITAL_R2) && !controller.get_digital(DIGITAL_R1)) || intakeState == 1){
-
-            if(mechState == 1 || mechState == 2){
-                intake.move_voltage(9000);
-            }
-            else intake.move_voltage(12000);
-			
-
-
-
-		}
-		else if(((!controller.get_digital(DIGITAL_R2) && controller.get_digital(DIGITAL_R1)) || controller.get_digital(DIGITAL_RIGHT)) || intakeState == 2){
-			intake.move_voltage(-12000);
-		}
-        else if(intakeState == 3) intake.move_voltage(3000);
-		else{
-			intake.move_voltage(0);
-		}       
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
         pros::delay(10);

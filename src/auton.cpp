@@ -1,5 +1,7 @@
 #include "main.h"
 
+
+
 void skills(){
     chassis.setPose(0,-61.5,0);
     setIntakeState(1);
@@ -103,16 +105,51 @@ void skills(){
 
 }
 
+ASSET(swirl_txt);
 void blueLeft(){
 
-    chassis.setPose(53,-60,270);
-    chassis.moveToPose(20,-60,280,2000,{.lead= .15,.minSpeed = 127},false);
+    chassis.setPose(54.75,-60+4.5+5.75,270);
+    setIntakeState(1);
+    chassis.moveToPose(22.5,-51,268,2000,{.lead=0.1,.minSpeed=127},true);
+    chassis.waitUntil(90);
     doinker.set_value(1);
-    base.tankTo(305,false);
-    base.tankTo(340,true);        
-    chassis.moveToPose(40,-55,270,2000,{.forwards = false,.lead=0.3},false);
+    chassis.waitUntilDone();
+
+
+    pros::delay(200);
+    setIntakeState(0);
+    //base.tankTo(305,false);
+    //base.tankTo(340,true);        
+    chassis.moveToPose(40,-45,270,2000,{.forwards = false,.lead=0.3, .minSpeed = 80},true);
+    chassis.waitUntil(40);
+    chassis.waitUntilDone();
+
+    setIntakeState(1);
     doinker.set_value(0);
-    base.tankTo(180,false);
+    pros::delay(250);
+
+    base.tankTo(-170);
+
+    chassis.moveToPose(25,-46,80,2000,{.forwards = false},true);
+    chassis.waitUntil(17);
+    goalClamp.set_value(1);
+    chassis.waitUntilDone();
+
+
+    chassis.moveToPose(23.5,-60,270,2000,{.lead=1});
+    goalClamp.set_value(0);
+    setIntakeState(1);
+    
+    chassis.moveToPose(23,-46,0,5000,{},true);
+    chassis.waitUntil(40);
+    setIntakeState(0);
+    chassis.waitUntilDone();
+
+    base.tankTo(90);
+
+
+    
+    //base.tankTo(180,false);
 
     /*
     pros::delay(2000);
@@ -131,34 +168,75 @@ void blueLeft(){
 }
 
 void blueRight(){
-    chassis.setPose(53,24,90);
-    chassis.moveToPose(25,24,90,2000,{.forwards = false,.minSpeed = 50},true);
-    chassis.waitUntil(25);
+    chassis.setPose(53.25,29.75,90);
+    chassis.moveToPose(20,22,70,1500,{.forwards = false,.lead = 0.25, .maxSpeed = 80},true);
+    chassis.waitUntil(29);
     goalClamp.set_value(1);
     chassis.waitUntilDone();
     base.tankTo(120, true);
     setIntakeState(1);
-    chassis.moveToPose(4,55,0,2000,{.forwards = true,.lead=0.80,.maxSpeed =70,.minSpeed = 30},true);
-    base.tankTo(115, true);
-    chassis.moveToPose(36,43,115,2000,{.forwards = true,.lead=0.80,.maxSpeed =80,.minSpeed = 60},true);
-    //add forward backward motion to intake the rings
-    chassis.moveToPose(58,58,45,2000,{.forwards = true,.lead=0.80,.maxSpeed =127,.minSpeed = 65},true);
-    base.tankTo(135, true);
+    chassis.moveToPose(5.5,57,0,2500,{.forwards = true,.lead=0.60,.maxSpeed =50,.minSpeed = 30},true);
+    pros::delay(150);
+    chassis.moveToPose(24,25,290,2000,{.forwards=false,.minSpeed=60},true);
+    base.tankTo(110, true);
+    chassis.moveToPose(36,43,90,2000,{.forwards = true,.lead=0.80,.maxSpeed =80,.minSpeed = 40},true);
+    base.tankTo(-50,true);
+    chassis.moveToPose(65,65,50,2000,{.forwards = true,.lead=0.80,.maxSpeed =127,.minSpeed = 65},true);
+    chassis.moveToPose(52,52,50,750,{.forwards = false, .minSpeed = 80});
+    base.tankTo(270, true);
     
-    chassis.moveToPose(52,2,180,3000,{.forwards = true,.lead=0.80,.maxSpeed =127,.minSpeed = 80},true);
+    intakeLift.set_value(1);
+    setMechState(1);
+    
+    chassis.moveToPose(52,10,180,3000,{.forwards = true,.lead=0.0, .maxSpeed = 90});
+    chassis.waitUntil(20);
+    setAutonState(false);
+    
+    chassis.waitUntilDone();
+    intakeLift.set_value(0);
+
+
+    chassis.moveToPose(52,0,180,1600,{});
+    chassis.waitUntil(10);
+    setIntakeState(2);
+    setMechState(2);
+
+
+    base.tankTo(0);
+    
+    chassis.moveToPose(58,-2,90,700,{.lead = 0},false);
+    setMechState(3);
+    pros::delay(500);
+
+    ls.move_voltage(-9000);
+    rs.move_voltage(-9000);
+    pros::delay(100);
+
+    //chassis.moveToPose(40,-2,90,1000,{.forwards = false, .lead = 0, .minSpeed=60},true);
+
+    setMechState(2);
+    pros::delay(50);
+    ls.move_voltage(0);
+    rs.move_voltage(0);
+
+    base.tankTo(180,true);
+    setMechState(3);
+
+
+
 
     //lift up the intake while going forward and move lb up
-    base.tankTo(0);
+    //base.tankTo(0);
     //forward 5 inches
     //scoring the ring with lb
     //back up a few inches
-    base.tankTo(180);
+    //base.tankTo(180);
 
-    ls.move_voltage(11000);
-    rs.move_voltage(11000);
-    pros::delay(500);
-    ls.move_voltage(0);
-    rs.move_voltage(0);
+    //ls.move_voltage(11000);
+    //rs.move_voltage(11000);
+    //pros::delay(500);
+    //ls.move_voltage(0);
+    //rs.move_voltage(0);
 
 }
 
