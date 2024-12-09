@@ -27,7 +27,7 @@ int mechState = 0; //0 = normal state, 1 = first ring, 2 = second ring, 3 = ram,
 int prevMechState;
 bool mechPrimed = false;
 
-vector<int> hsStates = {0, 37, 105, 210};
+vector<int> hsStates = {0, 35, 105, 210};
 
 double hs_kP = 0.23;
 double hs_kI = 0.00 / 10.0;

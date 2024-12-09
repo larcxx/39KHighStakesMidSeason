@@ -31,6 +31,7 @@ void screen() {
         pros::lcd::print(1, "y: %f", pose.y); // print the y position
         pros::lcd::print(2, "heading: %f", pose.theta); // print the heading
 		pros::lcd::print(3, "hs: %f", ((float) (hsAngle.get_angle()/100))); // print the y position
+		pros::lcd::print(4, "intake temp: %f", intake.get_temperature());
         pros::delay(50);
 		
     }
@@ -93,8 +94,8 @@ void autonomous() {
 
 	//pros::delay(60000);
 	//skills();
-	blueLeft();
-	//redRight();
+	//blueLeft();
+	redRight();
 	//blueRight();
 	//redRightElim();
 	//blueLeftElim();
