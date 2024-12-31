@@ -120,6 +120,7 @@ void sort(){
 void ladyBrown(){
     while(1){
         if(controller.get_digital(DIGITAL_L2)){
+            hs.set_brake_mode(MOTOR_BRAKE_HOLD);
             double currentPosition = (float) (hsAngle.get_angle()/100);
             if((currentPosition>0 && currentPosition<260) || currentPosition>342 && currentPosition<360){
                 if(controller.get_digital(DIGITAL_R1) && !controller.get_digital(DIGITAL_R2)){
