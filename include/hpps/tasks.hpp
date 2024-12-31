@@ -5,3 +5,5 @@ void setIntakeState(int state);
 void setDoinkerState();
 
 void setAutonState(bool value);
+
+void setAdjustment(bool value);

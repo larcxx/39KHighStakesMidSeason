@@ -30,8 +30,9 @@ void screen() {
         pros::lcd::print(0, "x: %f", pose.x); // print the x position
         pros::lcd::print(1, "y: %f", pose.y); // print the y position
         pros::lcd::print(2, "heading: %f", pose.theta); // print the heading
-		pros::lcd::print(3, "hs: %f", ((float) (hsAngle.get_angle()/100))); // print the y position
-		pros::lcd::print(4, "intake temp: %f", intake.get_temperature());
+		//pros::lcd::print(3, "hs: %f", ((float) (hsAngle.get_angle()/100))); // print the y position
+		//pros::lcd::print(4, "intake temp: %f", intake.get_temperature());
+		//pros::lcd::print(5, "intake ticks: %f", intake.get_position());
         pros::delay(50);
 		
     }
@@ -51,14 +52,14 @@ void initialize() {
 	ls.set_brake_mode_all(pros::MotorBrake::brake);
 	intake.set_brake_mode(pros::MotorBrake::coast);
 	hs.set_brake_mode(pros::MotorBrake::hold);
-	color.set_led_pwm(0);
+	color.set_led_pwm(50);
 	base.setDriveConstants(1.10, 0, 10, 0, 10.4, 1, 3500, 200);
 	base.setTankConstants(0.72, 0.008, 7.2, 7, 12, 3, 3000, 0); // TUNED W/ STL @ 200 
 	base.setPivotConstants(.37, 0, 1, 0, 3, /*LAST 3 VALS DONT MAKE DIFF; NEVER SETTLES */1, 1, 1);
 }
 
 /**
- * Runs while the robot is in the disabled state of Field Management System or
+ * Runs while the ro bot is in the disabled state of Field Management System or
  * the VEX Competition Switch, following either autonomous or opcontrol. When
  * the robot is enabled, this task will exit.
  */
@@ -95,7 +96,9 @@ void autonomous() {
 	//pros::delay(60000);
 	//skills();
 	//blueLeft();
-	redRight();
+	blueLeftElims();
+	//redLeft();
+	//redRight();
 	//blueRight();
 	//redRightElim();
 	//blueLeftElim();
@@ -129,11 +132,12 @@ bool clampState = false;
 bool doinkerPrimed = true;
 bool doinkerState = false;
 
+bool intakeLiftState = false;
 
 
 void opcontrol() {
 	setAutonState(false);
-
+	setAdjustment(false);
 	while (true) {
 		double left = controller.get_analog(ANALOG_LEFT_Y);    // Gets amount forward/backward from left joystick
 		double right = controller.get_analog(ANALOG_RIGHT_Y);  // Gets the turn left/right from right joystick
@@ -160,15 +164,28 @@ void opcontrol() {
 			clampPrimed = true;
 		}
 		
-
-		if(controller.get_digital(DIGITAL_L2) && doinkerPrimed){
-			doinkerState = !doinkerState;
-			
-			doinkerPrimed = false;
-		} 
 		if(!controller.get_digital(DIGITAL_L2)){
+			if(controller.get_digital(DIGITAL_L1) && doinkerPrimed){
+				doinkerState = !doinkerState;
+				
+				doinkerPrimed = false;
+			}
+			intakeLiftState = false;
+		}
+		else if(controller.get_digital(DIGITAL_L2)){
+			if(controller.get_digital(DIGITAL_L1)){
+				intakeLiftState = true;
+			}
+			else intakeLiftState = false;
+		}
+
+		if(!controller.get_digital(DIGITAL_L1)){
 			doinkerPrimed = true;
 		}
+
+	
+
+		intakeLift.set_value(intakeLiftState);
         
         doinker.set_value(doinkerState);
 

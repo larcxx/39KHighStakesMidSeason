@@ -4,3 +4,5 @@ void redRight();
 void blueRight();
 void redRightElim();
 void blueLeftElim();
+void redLeft();
+void blueLeftElims();
