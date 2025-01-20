@@ -28,11 +28,12 @@ void screen() {
 		
         lemlib::Pose pose = chassis.getPose(); // get the current position of the robot
         pros::lcd::print(0, "x: %f", pose.x); // print the x position
-        pros::lcd::print(1, "y: %f", pose.y); // print the y position
+    	pros::lcd::print(1, "y: %f", pose.y); // print the y position
         pros::lcd::print(2, "heading: %f", pose.theta); // print the heading
-		//pros::lcd::print(3, "hs: %f", ((float) (hsAngle.get_angle()/100))); // print the y position
-		//pros::lcd::print(4, "intake temp: %f", intake.get_temperature());
-		//pros::lcd::print(5, "intake ticks: %f", intake.get_position());
+		pros::lcd::print(3, "intake temp: %f", hs.get_temperature()); // print the y position
+		pros::lcd::print(4, "base temp: %f", (ls.get_temperature_all()[0] + ls.get_temperature_all()[1] + ls.get_temperature_all()[2] + rs.get_temperature_all()[0] + rs.get_temperature_all()[1] + rs.get_temperature_all()[2])/6);
+		pros::lcd::print(5, "intake ticks: %f", intakeTwo.get_position());
+
         pros::delay(50);
 		
     }
@@ -48,11 +49,12 @@ void initialize() {
 	pros::Task screenTask(screen);
 	pros::Task ladyBrownTask(ladyBrown);
 	pros::Task intakeTask(sort);
-	rs.set_brake_mode_all(pros::MotorBrake::brake);
-	ls.set_brake_mode_all(pros::MotorBrake::brake);
-	intake.set_brake_mode(pros::MotorBrake::coast);
-	hs.set_brake_mode(pros::MotorBrake::hold);
-	color.set_led_pwm(50);
+	rs.set_brake_mode_all(pros::MotorBrake::coast);
+	ls.set_brake_mode_all(pros::MotorBrake::coast);
+	intakeOne.set_brake_mode(pros::MotorBrake::brake);
+	intakeTwo.set_brake_mode(pros::MotorBrake::brake);
+	hs.set_brake_mode(pros::MotorBrake::coast);
+	color.set_led_pwm(100);
 	base.setDriveConstants(1.10, 0, 10, 0, 10.4, 1, 3500, 200);
 	base.setTankConstants(0.72, 0.008, 7.2, 7, 12, 3, 3000, 0); // TUNED W/ STL @ 200 
 	base.setPivotConstants(.37, 0, 1, 0, 3, /*LAST 3 VALS DONT MAKE DIFF; NEVER SETTLES */1, 1, 1);

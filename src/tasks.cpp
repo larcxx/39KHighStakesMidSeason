@@ -1,13 +1,12 @@
 #include "main.h"
 #include <vector>
+using namespace std;
+
+
 
 int sortState = 0; // 0 = no sort, 1 = blue sort, 2 = red sort
 bool sortPrimed = true;
 bool detection = false;
-
-
-using namespace std;
-
 
 bool auton = false;
 bool ladyBrownAdjustment = false;
@@ -20,19 +19,127 @@ void setAdjustment(bool value){
     ladyBrownAdjustment = true;
 }
 
+int intakeState = 0;
+void setIntakeState(int state){
+    intakeState = state;
+}
+
+bool intakeToggle = false;
+
+
+
+
+int ticksPerRev = 1725;
+int tick;
+int prevTick;
+
+vector<int> hooksPositionsSensor = {1314,12,454,905};
+vector<int> hooksPositionsEject = {0,417,853,1304};
+vector<bool> ringToEject = {false,false,false,false};
+
+//blue: 180 - 240
+//red: 330 - 30
+
+void sort(){
+    while(true){
+
+        tick = intakeTwo.get_position();
+        tick = fmod(tick,ticksPerRev);
+        
+        if(tick<0) tick+=ticksPerRev;
+        prevTick = tick;
+
+
+
+        double colorValue = color.get_hue();
+
+        if(colorValue > 180 && colorValue < 240){
+            double smallestDiff = 700;
+            int smallestIndex = 0;
+            for(int i = 0; i < hooksPositionsSensor.size(); i++){
+                double diff = fabs(tick - 200 - hooksPositionsSensor[i]);
+                if(diff>1600){
+                    diff -= ticksPerRev;
+                    diff *= -1;
+                }
+
+                if(diff<smallestDiff){
+                    smallestDiff = diff;
+                    smallestIndex = i;
+                } 
+            }
+
+            ringToEject[smallestIndex] = true;
+        }
 
 
 
 
 
 
+        if(intakeToggle == false){
+
+            if((controller.get_digital(DIGITAL_R2) && !controller.get_digital(DIGITAL_R1)) || intakeState == 1){
+                /*
+                for(int i = 0; i<hooksPositionsEject.size(); i++){
+
+
+                    int predictTick = fmod(tick-40,ticksPerRev); //set the tick further in front so when it comes into the range it will be right there
+
+
+                    double measuredDiff = fabs(predictTick-hooksPositionsEject[i]);
+                    if(measuredDiff>1600){
+                        measuredDiff -= ticksPerRev;
+                        measuredDiff *= -1;
+                    }
+
+                    if(measuredDiff<50 && ringToEject[i]){
+                        intake.move_voltage(-9000);
+                        pros::delay(100);
+                        intake.move_voltage(9000);
+                        ringToEject[i] = false;
+                    }
+                }
+                */
+                intakeOne.move_voltage(12000);
+                intakeTwo.move_voltage(12000);
+            }
+            else if(((!controller.get_digital(DIGITAL_R2) && controller.get_digital(DIGITAL_R1)) || controller.get_digital(DIGITAL_RIGHT)) || intakeState == 2){
+                intakeOne.move_voltage(-12000);
+                intakeTwo.move_voltage(-12000);
+            }
+            else if(intakeState == 3){
+                intakeOne.move_voltage(3000);
+                intakeTwo.move_voltage(3000);
+            }
+            else{
+                intakeOne.move_voltage(0);
+                intakeTwo.move_voltage(0);
+            }
+
+            if(intakeTwo.get_voltage()>2000 && (intakeOne.get_actual_velocity()<6 || intakeTwo.get_actual_velocity()<6) && auton){
+                intakeOne.move_voltage(-12000);
+                intakeTwo.move_voltage(-12000);
+                pros::delay(100);
+                intakeOne.move_voltage(12000);
+                intakeTwo.move_voltage(12000);
+            }
+        }
+        else{
+            intakeOne.move_voltage(0);
+            intakeTwo.move_voltage(0);
+        }
+
+        pros::delay(10);
+    }
+}
 
 
 int mechState = 0; //0 = normal state, 1 = first ring, 2 = second ring, 3 = ram, 4 = push down
 int prevMechState;
 bool mechPrimed = false;
 
-vector<int> hsStates = {0, 33, 110, 210};
+
 
 double hs_kP = 0.23;
 double hs_kI = 0.00 / 10.0;
@@ -47,81 +154,28 @@ double hs_settledTimeLimit = 80;
 void setMechState(int number){
     mechState = number;
 }
-
-int intakeState = 0;
-void setIntakeState(int state){
-    intakeState = state;
-}
-
-bool intakeToggle = false;
-
-
+double error;
 double prevError;
 
-int ticksPerRev = 700;
-int tick;
-int prevTick;
-
-void sort(){
-    while(true){
-
-        if(intakeToggle == false){
-
-            if((controller.get_digital(DIGITAL_R2) && !controller.get_digital(DIGITAL_R1)) || intakeState == 1){
-                
-                intake.move_voltage(12000);
-            }
-            else if(((!controller.get_digital(DIGITAL_R2) && controller.get_digital(DIGITAL_R1)) || controller.get_digital(DIGITAL_RIGHT)) || intakeState == 2){
-                intake.move_voltage(-12000);
-            }
-            else if(intakeState == 3) intake.move_voltage(3000);
-            else{
-                intake.move_voltage(0);
-            }
-
-            if(intake.get_voltage()>3000 && intake.get_actual_velocity()<6 && auton){
-                intake.move_voltage(-12000);
-                pros::delay(200);
-                intake.move_voltage(12000);
-            }
-            if(intake.get_voltage()>3000 && intake.get_actual_velocity()<6 && ladyBrownAdjustment){
-                intake.move_voltage(12000);
-                pros::delay(100);
-                intake.move_voltage(0);
-                pros::delay(100);
-                intake.move_voltage(12000);
-                pros::delay(100);
-                intake.move_voltage(0);
-                pros::delay(100);
-                intake.move_voltage(12000);
-                pros::delay(100);
-                intake.move_voltage(0);
-                pros::delay(100);
-                intake.move_voltage(12000);
-                ladyBrownAdjustment = false;
-            }
-        }
-        else intake.move_voltage(0);
-
-        
-        tick = intake.get_position();
+vector<int> hsStates = {0, 17, 110, 150};
 
 
-
-
-
-
-
-        prevTick = tick;
-    }
-}
-
+double hsTick;
 
 void ladyBrown(){
     while(1){
+
+        double currentPosition = hsAngle.get_angle()/100;
+
+        if(currentPosition < 0) currentPosition += 360;
+        if(currentPosition > 340) currentPosition -= 360;
+
+
+        
         if(controller.get_digital(DIGITAL_L2)){
             hs.set_brake_mode(MOTOR_BRAKE_HOLD);
-            double currentPosition = (float) (hsAngle.get_angle()/100);
+
+            
             if((currentPosition>0 && currentPosition<260) || currentPosition>342 && currentPosition<360){
                 if(controller.get_digital(DIGITAL_R1) && !controller.get_digital(DIGITAL_R2)){
                     hs.move_voltage(12000);
@@ -143,9 +197,7 @@ void ladyBrown(){
                 mechPrimed = true;
             }
 
-            double currentPosition = (float) (hsAngle.get_angle()/100);
-            if (currentPosition>340) currentPosition -= 360;
-            double error = currentPosition - hsStates[mechState];
+            error = currentPosition - hsStates[mechState];
             double derivative = error - prevError;
 
 
@@ -158,19 +210,28 @@ void ladyBrown(){
 
             double output = hs_kP*error + hs_kD*derivative;
 
-            if(mechState ==3 && error<10){
-                hs.move_voltage(0);
+            
+            if(mechState==2 || mechState==0){
                 hs.set_brake_mode(MOTOR_BRAKE_COAST);
             }
             else {
-                hs.move_voltage(output*1000);
                 hs.set_brake_mode(MOTOR_BRAKE_HOLD);
             }
+            
+
+            hs.move_voltage(output*1000);
+            hs.set_brake_mode(MOTOR_BRAKE_HOLD);
+            
+            
             prevError = error;
             prevMechState = mechState;
             
             intakeToggle = false;
         }
+        
+        
+        
+        controller.print(0,0, "Ticks1: %f", (float) currentPosition);
 
 
         pros::delay(10);

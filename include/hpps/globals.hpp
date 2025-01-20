@@ -5,7 +5,8 @@
 extern pros::v5::MotorGroup ls;
 extern pros::v5::MotorGroup rs;
 
-extern pros::v5::Motor intake;
+extern pros::v5::Motor intakeOne;
+extern pros::v5::Motor intakeTwo;
 extern pros::v5::Motor hs;
 
 extern pros::v5::IMU i1;

@@ -5,15 +5,15 @@
 lemlib::Drivetrain drivetrain(&ls,
                               &rs,
                               11.5, //change
-                              lemlib::Omniwheel::NEW_325,
-                              450,
+                              lemlib::Omniwheel::NEW_275,
+                              600,
                               20 // horizontal drift, we can go fast on corners now
 );
 
 //11.5/2 -4.45
 
-lemlib::TrackingWheel yPod(&yOdomPod, lemlib::Omniwheel::OLD_275, 1.6); // tune this value please
-lemlib::TrackingWheel xPod(&xOdomPod, lemlib::Omniwheel::OLD_275, -2.07);  
+lemlib::TrackingWheel yPod(&yOdomPod, lemlib::Omniwheel::OLD_275, -0.65); // tune this value please
+lemlib::TrackingWheel xPod(&xOdomPod, lemlib::Omniwheel::OLD_275, -1.2);
 
 lemlib::OdomSensors sensors(&yPod, nullptr, &xPod, nullptr, &i1);
 
