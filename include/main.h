@@ -78,6 +78,7 @@ void opcontrol(void);
 #include "hpps/pid.hpp"
 #include "hpps/auton.hpp"
 #include "hpps/tasks.hpp"
+#include "hpps/autonSelector.hpp"
 #endif
 
 #endif  // _PROS_MAIN_H_

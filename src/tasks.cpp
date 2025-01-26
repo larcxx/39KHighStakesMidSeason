@@ -53,7 +53,7 @@ void sort(){
 
         double colorValue = color.get_hue();
 
-        if(colorValue > 180 && colorValue < 240){
+        if(colorValue > 180 && colorValue < 270){
             double smallestDiff = 700;
             int smallestIndex = 0;
             for(int i = 0; i < hooksPositionsSensor.size(); i++){
@@ -80,7 +80,7 @@ void sort(){
         if(intakeToggle == false){
 
             if((controller.get_digital(DIGITAL_R2) && !controller.get_digital(DIGITAL_R1)) || intakeState == 1){
-                /*
+                
                 for(int i = 0; i<hooksPositionsEject.size(); i++){
 
                     
@@ -102,7 +102,7 @@ void sort(){
                         ringToEject[i] = false;
                     }
                 }
-                */
+                
                 intakeOne.move_voltage(12000);
                 intakeTwo.move_voltage(12000);
             }
@@ -133,6 +133,8 @@ void sort(){
             intakeTwo.move_voltage(0);
         }
 
+        
+
         pros::delay(10);
     }
 }
@@ -146,7 +148,7 @@ bool mechPrimed = false;
 
 double hs_kP = 0.23;
 double hs_kI = 0.00 / 10.0;
-double hs_kD = 0.015 * 10.0;
+
 double hs_integralBound = 7;
 double hs_maxVolts = 12;    
 double hs_acceptedError = 0.5;
@@ -160,7 +162,7 @@ void setMechState(int number){
 double error;
 double prevError;
 
-vector<double> hsStates = {0, 15.5, 157, 180, 110, 150};
+vector<double> hsStates = {0, 19, 157, 180, 110, 160};
 
 
 double hsTick;
@@ -205,26 +207,31 @@ void ladyBrown(){
 
 
             double hs_kP = 0.20;
-            if(mechState == 2) hs_kP = 0.18;
-            if(mechState == 3) hs_kP = 0.25;
+            if(mechState == 3) hs_kP = 0.1;
 
+            double hs_kD =  0.015*10;
 
 
 
             double output = hs_kP*error + hs_kD*derivative;
 
-            
+            /*
             if(mechState==2 || mechState==0){
                 hs.set_brake_mode(MOTOR_BRAKE_COAST);
             }
             else {
                 hs.set_brake_mode(MOTOR_BRAKE_HOLD);
             }
-            
+            */
 
-            hs.move_voltage(output*1000);
-            hs.set_brake_mode(MOTOR_BRAKE_HOLD);
-            
+            if(mechState==2){
+                if(error<0) hs.move_voltage(-12000);
+                else hs.move_voltage(0);
+            }
+            else{
+                hs.move_voltage(output*1000);
+                hs.set_brake_mode(MOTOR_BRAKE_HOLD);
+            }
             
             prevError = error;
             prevMechState = mechState;

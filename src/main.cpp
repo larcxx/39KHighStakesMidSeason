@@ -45,6 +45,7 @@ void screen() {
 void initialize() {
 	pros::lcd::initialize();
 	pros::lcd::register_btn1_cb(on_center_button);
+	start();
 	chassis.calibrate();
 	pros::Task screenTask(screen);
 	pros::Task ladyBrownTask(ladyBrown);
@@ -58,6 +59,7 @@ void initialize() {
 	base.setDriveConstants(1.10, 0, 10, 0, 10.4, 1, 3500, 200);
 	base.setTankConstants(0.72, 0.008, 7.2, 7, 12, 3, 3000, 0); // TUNED W/ STL @ 200 
 	base.setPivotConstants(.37, 0, 1, 0, 3, /*LAST 3 VALS DONT MAKE DIFF; NEVER SETTLES */1, 1, 1);
+	selection();
 }
 
 /**
@@ -92,18 +94,26 @@ void competition_initialize() {}
 void autonomous() {
 	setAutonState(true);
 
-	//rs.set_brake_mode_all(pros::MotorBrake::coast);
-	//ls.set_brake_mode_all(pros::MotorBrake::coast);
-
-	//pros::delay(60000);
-	skills();
-	//blueLeft();
-	//blueLeftElims();
-	//redLeft();
-	//redRight();
-	//blueRight();
-	//redRightElim();
-	//blueLeftElim();
+	switch(autonFunc){
+		case 0:
+			redLeft();
+			break;
+		case 1:
+			redRight();
+			break;
+		case 2:
+			blueLeft();
+			break;
+		case 3:
+			blueRight();
+			break;
+		case 4:
+			skills();
+			break;
+		default:
+			pros::delay(15000);
+			break;
+	}
 }
 
 /**
@@ -138,9 +148,10 @@ bool intakeLiftState = false;
 
 
 void opcontrol() {
-	setAutonState(false);
+	
 	setAdjustment(false);
 	while (true) {
+		setAutonState(false);
 		double left = controller.get_analog(ANALOG_LEFT_Y);    // Gets amount forward/backward from left joystick
 		double right = controller.get_analog(ANALOG_RIGHT_Y);  // Gets the turn left/right from right joystick
 		
