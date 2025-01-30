@@ -1,5 +1,5 @@
 #include "main.h"
-
+#include <vector>
 
 
 void skills(){
@@ -255,8 +255,11 @@ void blueLeft(){
     chassis.moveToPose(0,-65,210,1500,{},false);
 
     chassis.moveToPose(13,-24,210,1000,{.forwards = false});
-    
 
+    base.tankTo(-45);
+    setMechState(5);
+    
+    /*
     chassis.moveToPose(55,-51,172,3000,{.horizontalDrift=7});
     chassis.waitUntil(60);
     doinker.set_value(1);
@@ -587,7 +590,6 @@ void redLeft(){
 }
 
 void redRight(){
-
     chassis.setPose(49,60,270);
     chassis.moveToPose(15,57.5,260,2000,{.lead=0.23,.minSpeed=200},true);
     chassis.waitUntil(90);
@@ -626,6 +628,12 @@ void redRight(){
 
     base.tankTo(-60);
     chassis.moveToPose(0,60,330,2000,{});
+    chassis.moveToPose(9,22,330,1500,{.forwards = false});
+    base.tankTo(45);
+
+    setMechState(5);
+
+    /*
     base.tankTo(160);
     chassis.moveToPose(54,70,85,1500,{},true);
     chassis.waitUntil(20);
@@ -640,10 +648,7 @@ void redRight(){
 
 
     /*
-    chassis.moveToPose(9,22,330,1500,{.forwards = false});
-    base.tankTo(45);
 
-    setMechState(5);
     */
 
 
