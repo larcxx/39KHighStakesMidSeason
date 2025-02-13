@@ -29,12 +29,11 @@ bool intakeToggle = false;
 
 
 
-int ticksPerRev = 5175;
+int ticksPerRev = 2588;
 int tick;
 int prevTick;
-
-vector<int> hooksPositionsSensor = {3949,182,1450,2475};
-vector<int> hooksPositionsEject = {0,1285,2562,3835};
+vector<int> hooksPositionsSensor = {0,642,1279,1905};
+vector<int> hooksPositionsEject = {546,1184,1824,2449};
 vector<bool> ringToEject = {false,false,false,false};
 
 //blue: 180 - 240
@@ -54,22 +53,19 @@ void sort(){
         double colorValue = color.get_hue();
 
         if(colorValue > 180 && colorValue < 270){
-            double smallestDiff = 700;
+            double smallestDiff = ticksPerRev;
             int smallestIndex = 0;
             for(int i = 0; i < hooksPositionsSensor.size(); i++){
-                double diff = fabs(tick - 600 - hooksPositionsSensor[i]);
-                if(diff>1600){
-                    diff -= ticksPerRev;
-                    diff *= -1;
-                }
+                double diff = fabs(tick - hooksPositionsSensor[i]);
+                diff = min(diff, ticksPerRev-diff);
 
                 if(diff<smallestDiff){
                     smallestDiff = diff;
                     smallestIndex = i;
-                } 
+                }
             }
 
-            ringToEject[smallestIndex] = true;
+            if(fabs(smallestDiff)<200) ringToEject[smallestIndex] = true;
         }
 
 
@@ -81,52 +77,79 @@ void sort(){
 
             if((controller.get_digital(DIGITAL_R2) && !controller.get_digital(DIGITAL_R1)) || intakeState == 1){
                 
+                 
                 for(int i = 0; i<hooksPositionsEject.size(); i++){
 
-                    
+                    /*
                     int predictTick = fmod(tick-40,ticksPerRev); //set the tick further in front so when it comes into the range it will be right there
 
-
                     double measuredDiff = fabs(predictTick-hooksPositionsEject[i]);
-                    if(measuredDiff>1600){
+                    if(measuredDiff>2300){
                         measuredDiff -= ticksPerRev;
                         measuredDiff *= -1;
                     }
 
                     if(measuredDiff<50 && ringToEject[i]){
                         intakeOne.move_voltage(0);
-                        intakeTwo.move_voltage(-12000);
+                        intakeTwo.move_voltage(0);
                         pros::delay(200);
                         intakeOne.move_voltage(12000);
                         intakeTwo.move_voltage(12000);
                         ringToEject[i] = false;
                     }
+                    
+                    
+                    if(ringToEject[i]){
+                        double diffToEject = fabs(tick - hooksPositionsEject[i]-75); //delay 200ticks
+                        diffToEject = min(diffToEject, ticksPerRev-diffToEject);
+                        if(diffToEject<50){
+                            intakeOne.move_voltage(12000);
+                            intakeTwo.move_voltage(-12000);
+                            pros::delay(200);
+                            intakeOne.move_voltage(12000);
+                            intakeTwo.move_voltage(12000);
+                            ringToEject[i] = false;
+                        }
+                    }
+                    */
                 }
                 
-                intakeOne.move_voltage(12000);
-                intakeTwo.move_voltage(12000);
+                intakeOne.move_voltage(20000);
+                intakeTwo.move_voltage(1200000);
             }
-            else if(((!controller.get_digital(DIGITAL_R2) && controller.get_digital(DIGITAL_R1)) || controller.get_digital(DIGITAL_RIGHT)) || intakeState == 2){
+            else if((!controller.get_digital(DIGITAL_R2) && controller.get_digital(DIGITAL_R1))  || intakeState == 2){
                 intakeOne.move_voltage(-12000);
                 intakeTwo.move_voltage(-12000);
             }
             else if(intakeState == 3){
-                intakeOne.move_voltage(3000);
-                intakeTwo.move_voltage(3000);
+                intakeOne.move_voltage(12000);
+                intakeTwo.move_voltage(0);
+            }
+            else if(intakeState == 4 || controller.get_digital(DIGITAL_RIGHT)){
+                intakeOne.move_voltage(0);
+                intakeTwo.move_voltage(-12000);
+            }
+            else if(intakeState == 5){
+                intakeOne.move_voltage(12000);
+                intakeTwo.move_voltage(10000);
             }
             else{
                 intakeOne.move_voltage(0);
                 intakeTwo.move_voltage(0);
             }
             /*
-            if(intakeOne.get_voltage()>2000 && intakeOne.get_actual_velocity()<1 && auton){
+            if(intakeOne.get_voltage()>2000 && intakeOne.get_actual_velocity()<50){
                 intakeOne.move_voltage(-12000);
-                intakeTwo.move_voltage(-12000);
                 pros::delay(100);
                 intakeOne.move_voltage(12000);
+            }
+            if(intakeTwo.get_voltage()>2000 && intakeTwo.get_actual_velocity()<50){
+                intakeTwo.move_voltage(-12000);
+                pros::delay(100);
                 intakeTwo.move_voltage(12000);
             }
             */
+            
         }
         else{
             intakeOne.move_voltage(0);
@@ -162,7 +185,7 @@ void setMechState(int number){
 double error;
 double prevError;
 
-vector<double> hsStates = {0, 19, 157, 180, 110, 160};
+vector<double> hsStates = {0, 21, 130, 180, 140, 160};
 
 
 double hsTick;
@@ -181,16 +204,15 @@ void ladyBrown(){
             hs.set_brake_mode(MOTOR_BRAKE_HOLD);
 
             
-            if(currentPosition>-15 && currentPosition<260){
-                if(controller.get_digital(DIGITAL_R1) && !controller.get_digital(DIGITAL_R2)){
-                    hs.move_voltage(12000);
-                }
-                else if(!controller.get_digital(DIGITAL_R1) && controller.get_digital(DIGITAL_R2)){
-                    hs.move_voltage(-12000);
-                }   
-                else hs.move_voltage(0);            
+
+            if(controller.get_digital(DIGITAL_R1) && !controller.get_digital(DIGITAL_R2)){
+                if(currentPosition>1 && currentPosition<260) hs.move_voltage(9000);
+            }
+            else if(!controller.get_digital(DIGITAL_R1) && controller.get_digital(DIGITAL_R2)){
+                if(currentPosition>-15 && currentPosition<210) hs.move_voltage(-9000);
             }
             else hs.move_voltage(0);
+            
             intakeToggle = true;
         }
         else{
@@ -207,7 +229,7 @@ void ladyBrown(){
 
 
             double hs_kP = 0.20;
-            if(mechState == 3) hs_kP = 0.1;
+            if(mechState == 3) hs_kP = 0.14;
 
             double hs_kD =  0.015*10;
 

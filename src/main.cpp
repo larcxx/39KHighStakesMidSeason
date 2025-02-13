@@ -32,7 +32,7 @@ void screen() {
         pros::lcd::print(2, "heading: %f", pose.theta); // print the heading
 		pros::lcd::print(3, "intake temp: %f", hs.get_temperature()); // print the y position
 		pros::lcd::print(4, "base temp: %f", (ls.get_temperature_all()[0] + ls.get_temperature_all()[1] + ls.get_temperature_all()[2] + rs.get_temperature_all()[0] + rs.get_temperature_all()[1] + rs.get_temperature_all()[2])/6);
-		pros::lcd::print(5, "intake ticks: %f", fmod(intakeTwo.get_position(),5175));
+		pros::lcd::print(6, "intake ticks: %f", fmod(intakeTwo.get_position(),2588));
 
         pros::delay(50);
 		

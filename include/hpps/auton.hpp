@@ -6,3 +6,6 @@ void redRightElim();
 void blueLeftElim();
 void redLeft();
 void blueLeftElims();
+void AWPRed();
+void AWPBlue();
+void qualRedRight();

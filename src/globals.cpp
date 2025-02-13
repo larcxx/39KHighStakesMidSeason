@@ -24,4 +24,4 @@ pros::adi::DigitalOut goalClamp('A');
 pros::v5::Controller controller(pros::E_CONTROLLER_MASTER);
 
 pros::adi::DigitalOut doinker('H');
-pros::adi::DigitalOut intakeLift('F');
+pros::adi::DigitalOut intakeLift('B');
