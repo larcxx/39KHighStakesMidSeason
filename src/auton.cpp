@@ -510,8 +510,8 @@ void blueRight(){
     pros::delay(250);
     ls.move_voltage(0);
     ls.move_voltage(0);
-    chassis.moveToPose(-19,-24,290,1500,{.forwards=false, .maxSpeed = 80},true);
-    chassis.waitUntil(20);
+    chassis.moveToPose(-19,-24,280,1500,{.forwards=false, .maxSpeed = 80},true);
+    chassis.waitUntil(22);
     setMechState(0);
     chassis.waitUntil(41);
     goalClamp.set_value(1);
@@ -537,7 +537,7 @@ void blueRight(){
     chassis.moveToPose(-48,-3,0,1500,{.minSpeed = 30, .earlyExitRange = 2});
     chassis.moveToPose(-48,-15,0,1500,{.forwards = false, .minSpeed = 30, .earlyExitRange = 2});
 
-
+    intakeLift.set_value(0);
     chassis.moveToPose(-20,-5,70,1000,{}, false);
     setMechState(5);
 
