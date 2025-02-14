@@ -130,8 +130,8 @@ void sort(){
                 intakeTwo.move_voltage(-12000);
             }
             else if(intakeState == 5){
-                intakeOne.move_voltage(12000);
-                intakeTwo.move_voltage(10000);
+                intakeOne.move_voltage(0);
+                intakeTwo.move_voltage(12000);
             }
             else{
                 intakeOne.move_voltage(0);

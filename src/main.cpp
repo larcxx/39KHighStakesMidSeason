@@ -96,7 +96,7 @@ void autonomous() {
 
 	switch(autonFunc){
 		case 0:
-			redLeft();
+			redLeftElim();
 			break;
 		case 1:
 			redRight();
@@ -105,7 +105,7 @@ void autonomous() {
 			blueLeft();
 			break;
 		case 3:
-			blueRight();
+			blueRightElim();
 			break;
 		case 4:
 			skills();
