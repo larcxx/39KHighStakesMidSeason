@@ -519,7 +519,7 @@ void blueRight(){
     setIntakeState(1);
 
     base.tankTo(-172);
-    chassis.moveToPose(-6,-56,180,2000,{.maxSpeed = 75, .earlyExitRange = 3},false);
+    chassis.moveToPose(-6,-56,180,2000,{.maxSpeed = 60, .earlyExitRange = 3},false);
     chassis.moveToPose(-24,-24,135,1500,{.forwards=false, .lead = 0.6, .earlyExitRange = 3},true);
     base.tankTo(143);
     //chassis.moveToPose(-24,50,0,1500,{});
@@ -531,16 +531,17 @@ void blueRight(){
     pros::delay(200);
 
     setMechState(0);
-    chassis.moveToPose(-48,-24,180,2000,{.forwards=false, .minSpeed = 70, .earlyExitRange = 3 });
+    chassis.moveToPose(-48,-24,180,2000,{.forwards=false, .minSpeed = 70 });
     base.tankTo(-37,true);
     intakeLift.set_value(1);
     chassis.moveToPose(-48,-3,0,1500,{.minSpeed = 30, .earlyExitRange = 2});
     chassis.moveToPose(-48,-15,0,1500,{.forwards = false, .minSpeed = 30, .earlyExitRange = 2});
 
-    intakeLift.set_value(0);
-    chassis.moveToPose(-20,-5,70,1000,{}, false);
-    setMechState(5);
 
+    chassis.moveToPose(-20,-5,70,1000,{}, false);
+    intakeLift.set_value(0);
+
+    setMechState(5);
 
     /*
     chassis.setPose(57,12,90);
