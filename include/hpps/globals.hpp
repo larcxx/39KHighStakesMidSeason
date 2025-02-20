@@ -24,3 +24,6 @@ extern pros::v5::Controller controller;
 extern pros::adi::DigitalOut doinker;
 
 extern pros::adi::DigitalOut intakeLift;
+
+extern pros::v5::Distance distY;
+extern pros::v5::Distance distX;

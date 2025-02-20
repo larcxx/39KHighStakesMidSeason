@@ -73,7 +73,7 @@ double Base::calcDist(double targetHeading, double currentHeading, turnDir t) {
 }
 
 
-void Base::tankTo(double targetAngle, bool chain, turnDir t) {
+void Base::tankTo(double targetAngle, bool chain, turnDir t, double out) {
     double currentAngle = 360 - i1.get_heading();
     double tankError = calcDist(targetAngle, currentAngle, t);
     PID tankPID(tankError, tank_kP, tank_kI, tank_kD, tank_integralBound, tank_acceptedError, tank_timeLimit, tank_settledTimeLimit);
@@ -81,19 +81,9 @@ void Base::tankTo(double targetAngle, bool chain, turnDir t) {
         currentAngle = 360 - i1.get_heading();
 
         tankError = calcDist(targetAngle, currentAngle, shortest);
-        if(chain && fabs(tankError)<5) break;
+        if(chain && fabs(tankError)<out) break;
 
         double tankOutput = clamp(tankPID.calc(tankError), -tank_maxVolts, tank_maxVolts);
-
-        // Controller.Screen.clearScreen();
-        // Controller.Screen.setCursor(1, 1);
-        // Controller.Screen.print(currentAngle);
-        // Controller.Screen.newLine();
-        // Controller.Screen.print(targetAngle);
-        // Controller.Screen.newLine();
-        // Controller.Screen.print(tankError);
-        // Controller.Screen.newLine();
-        // Controller.Screen.print(tankOutput);
 
         double leftPower = -tankOutput;
         double rightPower = tankOutput;
@@ -122,16 +112,20 @@ void Base::pivotTo(double targetAngle, side s, turnDir t) {
         
         if(s==leftBase){
             ls.move_voltage(leftPower*1000);
+            rs.move_voltage(0);
         }
         else{
             ls.move_voltage(0);
+            rs.move_voltage(0);
         }
 
         if(s==rightBase){
             rs.move_voltage(rightPower*1000);
+            ls.move_voltage(0);
         }
         else{
             rs.move_voltage(0);
+            ls.move_voltage(0);
         }
 
         pros::delay(10);

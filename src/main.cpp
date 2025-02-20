@@ -27,12 +27,14 @@ void screen() {
 		
 		
         lemlib::Pose pose = chassis.getPose(); // get the current position of the robot
-        pros::lcd::print(0, "x: %f", pose.x); // print the x position
-    	pros::lcd::print(1, "y: %f", pose.y); // print the y position
-        pros::lcd::print(2, "heading: %f", pose.theta); // print the heading
-		pros::lcd::print(3, "intake temp: %f", hs.get_temperature()); // print the y position
-		pros::lcd::print(4, "base temp: %f", (ls.get_temperature_all()[0] + ls.get_temperature_all()[1] + ls.get_temperature_all()[2] + rs.get_temperature_all()[0] + rs.get_temperature_all()[1] + rs.get_temperature_all()[2])/6);
-		pros::lcd::print(6, "intake ticks: %f", fmod(intakeTwo.get_position(),2588));
+        pros::lcd::print(1, "x: %f", pose.x); // print the x position
+    	pros::lcd::print(2, "y: %f", pose.y); // print the y position
+        pros::lcd::print(3, "heading: %f", pose.theta); // print the heading
+
+		pros::lcd::print(4, "intake temp: %f", hs.get_temperature()); // print the y position
+		pros::lcd::print(5, "base temp: %f", (ls.get_temperature_all()[0] + ls.get_temperature_all()[1] + ls.get_temperature_all()[2] + rs.get_temperature_all()[0] + rs.get_temperature_all()[1] + rs.get_temperature_all()[2])/6);
+		
+		pros::lcd::print(7, "hsAngle angle: %f", (float) hsAngle.get_angle()); // print the heading
 
         pros::delay(50);
 		
@@ -52,8 +54,8 @@ void initialize() {
 	pros::Task intakeTask(sort);
 	rs.set_brake_mode_all(pros::MotorBrake::coast);
 	ls.set_brake_mode_all(pros::MotorBrake::coast);
-	intakeOne.set_brake_mode(pros::MotorBrake::brake);
-	intakeTwo.set_brake_mode(pros::MotorBrake::brake);
+	intakeOne.set_brake_mode(pros::MotorBrake::coast);
+	intakeTwo.set_brake_mode(pros::MotorBrake::coast);
 	hs.set_brake_mode(pros::MotorBrake::coast);
 	color.set_led_pwm(100);
 	base.setDriveConstants(1.10, 0, 10, 0, 10.4, 1, 3500, 200);
@@ -94,26 +96,68 @@ void competition_initialize() {}
 void autonomous() {
 	setAutonState(true);
 
+
+	setSortState(0);
+	skills();
+	/*
 	switch(autonFunc){
 		case 0:
-			redLeftElim();
+			setSortState(1);
+			redLeft(); //done
 			break;
 		case 1:
-			redRight();
+			setSortState(1);
+			redLeftElim();  //done
 			break;
 		case 2:
-			blueLeft();
+			setSortState(0);
+			qualRedRight(); //done
 			break;
 		case 3:
-			blueRightElim();
+			setSortState(1);
+			redRight();  
 			break;
 		case 4:
+			setSortState(1);
+			redRightElim();
+			break;
+		case 5:
+			setSortState(2);
+			qualBlueLeft(); //done
+			break;
+		case 6:
+			setSortState(2);
+			blueLeft();
+			break;
+		case 7:
+			setSortState(2);
+			blueLeftElim();
+			break;
+		case 8:
+			setSortState(2);
+			blueRight(); //done
+			break;
+		case 9:
+			setSortState(2);
+			blueRightElim(); //done
+			break;
+		case 10:
+			setSortState(1);
 			skills();
 			break;
+		case 11:
+			setSortState(1);
+			AWPRed(); //done
+			break;
+		case 12:
+			setSortState(2);
+			AWPBlue();  /done
+			break;			
 		default:
 			pros::delay(15000);
 			break;
-	}
+	}*/
+	
 }
 
 /**
@@ -146,8 +190,14 @@ bool doinkerState = false;
 
 bool intakeLiftState = false;
 
+int chooseSortState = 0;
+
+int currentMechState;
+
 
 void opcontrol() {
+
+	chassis.setPose(48,-60,290);
 	
 	setAdjustment(false);
 	while (true) {
@@ -158,6 +208,10 @@ void opcontrol() {
 
 
 		setIntakeState(0);
+
+		currentMechState = getMechState();
+		
+
 		if(fabs(left)>10){
 			ls.move_voltage(12000*driveCurve(left)/127);
 		}
@@ -194,11 +248,18 @@ void opcontrol() {
 			else intakeLiftState = false;
 		}
 
+		if(controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_A)){
+			chooseSortState = (chooseSortState+1)%3;
+		}
+
+
 	
 
 		intakeLift.set_value(intakeLiftState);
         
         doinker.set_value(doinkerState);
+
+		setSortState(chooseSortState);
 
 
 

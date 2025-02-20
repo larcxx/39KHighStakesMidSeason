@@ -76,7 +76,7 @@ public:
 
     double calcDist(double targetHeading, double currentHeading, turnDir t);
 
-    void tankTo(double targetAngle, bool chain = false, turnDir t = shortest);
+    void tankTo(double targetAngle, bool chain = false, turnDir t = shortest, double out = 6.5);
     // void tankFor();
 
     void pivotTo(double targetAngle, side s, turnDir t = shortest);
