@@ -63,6 +63,8 @@ void DrivePID(double distance, int Timeout) {
 
 void skills(){
 
+    setSortState(1);
+
     chassis.setPose(63.5,0,270);
     setIntakeState(10);
 
@@ -86,7 +88,7 @@ void skills(){
     chassis.moveToPose(24,25.5,270,1500,{ .minSpeed = 60});
     base.tankTo(-55);
 
-    chassis.moveToPose(-52,62.5,290,3000,{.horizontalDrift = 10, .lead = 0.65, .maxSpeed = 80, .minSpeed = 10},false);
+    chassis.moveToPose(-52,62.5,290,3000,{.horizontalDrift = 8, .lead = 0.65, .maxSpeed = 80, .minSpeed = 10},false);
 
     
 
@@ -104,7 +106,7 @@ void skills(){
     base.tankTo(-90);
 
 
-    chassis.moveToPose(-4,65,0,1500,{.lead = 0, .maxSpeed = 80, .minSpeed = 40},false);
+    chassis.moveToPose(-4,66,0,1500,{.lead = 0, .maxSpeed = 80, .minSpeed = 40},false);
 
     setMechState(2);
     setIntakeState(4);
@@ -139,7 +141,7 @@ void skills(){
     
 
     chassis.moveToPose(57,52,90,1000,{.forwards=false, .minSpeed=10, .earlyExitRange=1},false);
-    setIntakeState(0);
+    setIntakeState(6);
     base.tankTo(-45, true);
     setIntakeState(1);
     chassis.moveToPose(48,61,315,1000,{});
@@ -155,8 +157,8 @@ void skills(){
     chassis.waitUntilDone();
 
     base.tankTo(-90, true, shortest, 2);
-    chassis.moveToPose(48, -24, 0, 1200, {.forwards = false, .maxSpeed = 50}, true);
-    chassis.waitUntil(24);
+    chassis.moveToPose(48, -23, 0, 1200, {.forwards = false, .maxSpeed = 50}, true);
+    chassis.waitUntil(22);
     goalClamp.set_value(1);
     chassis.waitUntilDone();
 
@@ -165,20 +167,22 @@ void skills(){
 
     base.tankTo(0);
     setIntakeState(1);
-    chassis.moveToPose(24,-24,270,1500,{.minSpeed = 1});
-    base.tankTo(45);
+    chassis.moveToPose(26,-22,270,1500,{.minSpeed = 1});
+    base.tankTo(47);
 
 
-    chassis.moveToPose(-49,-58,250,3000,{.horizontalDrift = 10, .lead = 0.65, .maxSpeed = 80},true);
-    chassis.waitUntil(80);
+    chassis.moveToPose(-49,-56,250,3000,{.horizontalDrift = 8, .lead = 0.5, .maxSpeed = 80},false);
+
+    
+    chassis.moveToPose(-7,-40,250,2000,{.forwards=false, .minSpeed = 30}, true);
+    chassis.waitUntil(1);
     setMechState(1);
     chassis.waitUntilDone();
 
-    
-    chassis.moveToPose(-5,-40,250,2000,{.forwards=false, .minSpeed = 30}, false);
+
 
     base.tankTo(90);
-    chassis.moveToPose(-5,-64,180,1500,{.lead = 0, .maxSpeed = 80, .minSpeed = 20},false);
+    chassis.moveToPose(-5.7,-64,180,1500,{.lead = 0, .maxSpeed = 80, .minSpeed = 20},false);
     chassis.setPose(chassis.getPose().x, -63.9, chassis.getPose().theta);
 
     setMechState(2);
@@ -209,7 +213,7 @@ void skills(){
     base.tankTo(180);
     setIntakeState(1);
     chassis.moveToPose(61,-51,90,5000, {.maxSpeed=50, .minSpeed = 30},false);
-    setIntakeState(0);
+    setIntakeState(6);
     base.tankTo(45, true);
     setIntakeState(1);
     chassis.moveToPose(48,-64,225,1500,{.earlyExitRange = 1.5});
@@ -225,7 +229,7 @@ void skills(){
     setMechState(1);
     chassis.waitUntilDone();
 
-    chassis.moveToPose(-57,-26,220,2000,{.lead = 0.3, .maxSpeed = 80, .minSpeed = 55}, true);
+    chassis.moveToPose(-57,-25,236,2000,{.lead = 0.35, .maxSpeed = 80, .minSpeed = 55}, true);
 
     chassis.moveToPose(-72,-62,180,2500,{.lead = 0.3, .minSpeed = 50},false);
 
@@ -240,7 +244,7 @@ void skills(){
 
     base.tankTo(0);
 
-    chassis.moveToPose(-70,-1,270,1500,{.minSpeed = 70}, false);    
+    chassis.moveToPose(-70,-2,265,1500,{.minSpeed = 70}, false);    
 
     DrivePID(-7,1000);
 
@@ -255,7 +259,7 @@ void skills(){
 
     DrivePID(-7,500);
 
-    setIntakeState(1);
+    setIntakeState(6);
     setMechState(0);
 
 
@@ -269,7 +273,7 @@ void skills(){
     
     //base.tankTo(315, true);
 
-    chassis.moveToPose(-40,48,315,2000,{.maxSpeed = 100, .minSpeed = 70}, true);
+    chassis.moveToPose(-38,45,315,2000,{.maxSpeed = 100, .minSpeed = 70}, true);
     chassis.waitUntil(25);
     setIntakeState(1);
     chassis.waitUntilDone();
@@ -278,27 +282,31 @@ void skills(){
     setIntakeState(1);
     chassis.moveToPose(-55,50,270,1500,{.maxSpeed = 80, .minSpeed = 50},false);
     setIntakeState(1);
-    chassis.moveToPose(-44,50,270,1000,{.forwards = false, .minSpeed = 80},true);
-    chassis.waitUntil(8);
+    chassis.moveToPose(-40,50,270,1000,{.forwards = false, .minSpeed = 90},true);
+    chassis.waitUntil(10);
     doinker.set_value(1);
     setIntakeState(1);
     chassis.waitUntilDone();
 
-    base.tankTo(200, true, shortest, 25);
+    base.tankTo(210, true, shortest, 20);
     base.tankTo(135, true);
 
     doinker.set_value(0);
 
     goalClamp.set_value(0);
 
-    DrivePID(-10,600);
+    DrivePID(-100,600);
 
-    chassis.moveToPose(-28,38,135,2000,{.minSpeed=50});
+    chassis.moveToPose(-30,30,135,2000,{.minSpeed=50});
 
+    setIntakeState(11);
     setMechState(3);
     base.tankTo(-45);
 
-    DrivePID(-2000,5000);
+   //DrivePID(-2000,15000);
+    
+
+    chassis.moveToPose(0,-5,135,2000,{.forwards =false, .maxSpeed = 80, .minSpeed=70});
 
     //chassis.moveToPose(-10,10,45,4000, {.forwards =false, .maxSpeed = 100, .minSpeed = 100});
 
@@ -307,24 +315,25 @@ void skills(){
 
 void redLeft(){
     chassis.setPose(-58.33,13.23,217);
-    
     setMechState(3);
     pros::delay(500);
-    ls.move_voltage(-3000);
-    rs.move_voltage(-3000);
+    /*
+    ls.move_voltage(-6000);
+    rs.move_voltage(-6000);
     pros::delay(250);
     ls.move_voltage(0);
     ls.move_voltage(0);
-    chassis.moveToPose(-20,24,255,1500,{.forwards=false, .maxSpeed = 80},true);
+    */
+    chassis.moveToPose(-20,24,270,2500,{.forwards=false, .lead = 0.7, .maxSpeed = 80},true);
     chassis.waitUntil(20);
     setMechState(0);
-    chassis.waitUntil(36);
+    chassis.waitUntil(45);
     goalClamp.set_value(1);
     chassis.waitUntilDone();
     setIntakeState(1);
 
     base.tankTo(-188);
-    chassis.moveToPose(-6,56,0,2000,{.maxSpeed = 70},false);
+    chassis.moveToPose(-8,60,0,2000,{.maxSpeed = 60},false);
 
     chassis.moveToPose(-24,24,45,1500,{.forwards=false, .lead = 0.6, .minSpeed = 40},false);
     setIntakeState(0);
@@ -335,12 +344,13 @@ void redLeft(){
     chassis.moveToPose(-75,68,270,1500,{.lead = 0.2, .minSpeed = 100},false);
 
     setMechState(0);
-    chassis.moveToPose(-48,24,0,2000,{.forwards=false, .minSpeed = 45, .earlyExitRange = 3}); 
+    chassis.moveToPose(-46.5,24,0,2000,{.forwards=false, .minSpeed = 45, .earlyExitRange = 3}); 
+    intakeLift.set_value(1);
     base.tankTo(37,true);
 
-    intakeLift.set_value(1);
-    chassis.moveToPose(-49,0,180,1200,{.earlyExitRange = 3});
-    chassis.moveToPose(-49,15,180,1200,{.forwards = false, .earlyExitRange = 3});
+    
+    chassis.moveToPose(-47.8,0,180,1200,{.earlyExitRange = 3});
+    chassis.moveToPose(-47.8,15,180,1200,{.forwards = false, .earlyExitRange = 3});
 
 
     chassis.moveToPose(-20,5,110,1000,{},false);
@@ -351,24 +361,25 @@ void redLeft(){
 
 void redLeftElim(){
     chassis.setPose(-58.33,13.23,217);
-    
     setMechState(3);
     pros::delay(500);
-    ls.move_voltage(-3000);
-    rs.move_voltage(-3000);
+    /*
+    ls.move_voltage(-6000);
+    rs.move_voltage(-6000);
     pros::delay(250);
     ls.move_voltage(0);
     ls.move_voltage(0);
-    chassis.moveToPose(-20,24,255,1500,{.forwards=false, .maxSpeed = 80},true);
+    */
+    chassis.moveToPose(-20,24,270,2500,{.forwards=false, .lead = 0.7, .maxSpeed = 80},true);
     chassis.waitUntil(20);
     setMechState(0);
-    chassis.waitUntil(36);
+    chassis.waitUntil(45);
     goalClamp.set_value(1);
     chassis.waitUntilDone();
     setIntakeState(1);
 
     base.tankTo(-188);
-    chassis.moveToPose(-6,56,0,2000,{.maxSpeed = 55},false);
+    chassis.moveToPose(-8,60,0,2000,{.maxSpeed = 60},false);
 
     chassis.moveToPose(-24,24,45,1500,{.forwards=false, .lead = 0.6, .minSpeed = 40},false);
     setIntakeState(0);
@@ -379,18 +390,23 @@ void redLeftElim(){
     chassis.moveToPose(-75,68,270,1500,{.lead = 0.2, .minSpeed = 100},false);
 
     setMechState(0);
-    chassis.moveToPose(-48,24,0,2000,{.forwards=false, .minSpeed = 45, .earlyExitRange = 3}); 
+    chassis.moveToPose(-46.5,28,0,2000,{.forwards=false, .minSpeed = 45, .earlyExitRange = 3}); 
+    intakeLift.set_value(1);
     base.tankTo(37,true);
 
-    intakeLift.set_value(1);
-    chassis.moveToPose(-49,0,180,1200,{.earlyExitRange = 3},false);
+    
+    chassis.moveToPose(-47.8,0,180,1200,{.earlyExitRange = 3},false);
     intakeLift.set_value(0);
-    chassis.moveToPose(-49,15,180,1200,{.forwards = false, .earlyExitRange = 3},false);
+    chassis.moveToPose(-47.8,20,180,1200,{.forwards = false, .earlyExitRange = 3});
+    
 
     base.tankTo(7,true);
-    chassis.moveToPose(-58,-60,200,2000,{.minSpeed = 50},true);
+    chassis.moveToPose(-58,-60,200,2000,{.minSpeed = 100},true);
     chassis.waitUntil(6);
     setIntakeState(0);
+
+    base.tankTo(180);
+    
     
 
         
@@ -408,9 +424,9 @@ void qualRedRight(){
     ls.move_voltage(0);
     ls.move_voltage(0);
     chassis.moveToPose(-19,-24,280,1500,{.forwards=false, .maxSpeed = 80},true);
-    chassis.waitUntil(22);
+    chassis.waitUntil(20);
     setMechState(0);
-    chassis.waitUntil(41);
+    chassis.waitUntil(38);
     goalClamp.set_value(1);
     chassis.waitUntilDone();
     setIntakeState(3);
@@ -422,24 +438,100 @@ void qualRedRight(){
     base.tankTo(53);
     setIntakeState(1);
     chassis.moveToPose(-68,-72,180,2000,{.lead = 0.4, .minSpeed = 100},true);
-    pros::delay(200);
+
+    chassis.moveToPose(-45,-65,180,2000,{.forwards = false, .lead = 0.4, .minSpeed = 100},false);
+
+    pros::delay(1000);
+    goalClamp.set_value(0);
+
+
 
     setMechState(0);
-    chassis.moveToPose(-48,-24,180,2000,{.forwards=false, .minSpeed = 70 }, false);
-    base.tankTo(-37,true);
 
+
+    base.tankTo(-120);
+    goalClamp.set_value(0);
+
+    chassis.moveToPose(-24, -50, 270, 2000, {.minSpeed = 30});
+    base.tankTo(53);
+
+
+
+
+
+
+    /*
+    chassis.moveToPose(-10,-10,75,1500,{.lead = 0.3},true);
+    chassis.waitUntil(24);
+    setIntakeState(0);
+    chassis.waitUntilDone();
+    doinker.set_value(1);
+    pros::delay(300);
+
+    chassis.moveToPose(-24,-28,30,1500,{.forwards = false,.earlyExitRange = 1},false);
+    doinker.set_value(0);
     setIntakeState(1);
-    chassis.moveToPose(-48,0,0,1500,{.minSpeed = 30, .earlyExitRange = 2},false);
-    intakeLift.set_value(0);
-    chassis.moveToPose(-48,-20,0,1500,{.forwards = false, .minSpeed = 30,.earlyExitRange = 2});
+    chassis.moveToPose(-24,-12,0,1500,{.minSpeed = 30, .earlyExitRange = 1});
+    */
 
 
-    chassis.moveToPose(-20,-5,70,1000,{}, false);
+}
 
-
+void qualRedRightTanner(){
+    chassis.setPose(-58.33,-13.23,323);
     
+    setMechState(3);
+    pros::delay(500);
+    ls.move_voltage(-6000);
+    rs.move_voltage(-6000);
+    pros::delay(250);
+    ls.move_voltage(0);
+    ls.move_voltage(0);
+    chassis.moveToPose(-19,-24,280,1500,{.forwards=false, .maxSpeed = 80},true);
+    chassis.waitUntil(20);
+    setMechState(0);
+    chassis.waitUntil(38);
+    goalClamp.set_value(1);
+    chassis.waitUntilDone();
+    setIntakeState(3);
 
-    setMechState(5);
+    base.tankTo(143);
+
+    chassis.moveToPose(-22,-50,180,2000,{.minSpeed = 50}, false);
+    chassis.moveToPose(-22,-20,180,2000,{.forwards = false, .minSpeed = 50, .earlyExitRange=3}, false);
+    base.tankTo(53);
+    setIntakeState(1);
+    chassis.moveToPose(-68,-72,180,2000,{.lead = 0.4, .minSpeed = 100},true);
+
+    chassis.moveToPose(-45,-65,180,2000,{.forwards = false, .lead = 0.4, .minSpeed = 100},false);
+
+    pros::delay(1000);
+    goalClamp.set_value(0);
+
+
+
+    setMechState(0);
+
+
+    base.tankTo(-120);
+    goalClamp.set_value(0);
+
+    chassis.moveToPose(-5, -61, 90, 2000, {.maxSpeed = 80},false);
+
+    doinker.set_value(1);
+    pros::delay(200);
+
+    chassis.moveToPose(-48, -61, 90, 200, {.forwards = false, .minSpeed = 90}, false);
+
+    doinker.set_value(0);
+
+    pros::delay(200);
+    base.tankTo(53);
+
+
+
+
+
 
     /*
     chassis.moveToPose(-10,-10,75,1500,{.lead = 0.3},true);
@@ -620,12 +712,12 @@ void qualBlueLeft(){
     pros::delay(1500);
     setMechState(3);
     pros::delay(500);
-    ls.move_voltage(-3000);
-    rs.move_voltage(-3000);
+    ls.move_voltage(-6000);
+    rs.move_voltage(-6000);
     pros::delay(250);
     ls.move_voltage(0);
     ls.move_voltage(0);
-    chassis.moveToPose(-24,22,255,1500,{.forwards=false, .maxSpeed = 80},true);
+    chassis.moveToPose(-24,24,255,1500,{.forwards=false, .maxSpeed = 80},true);
     chassis.waitUntil(20);
     setMechState(0);
     chassis.waitUntil(36);
@@ -641,8 +733,8 @@ void qualBlueLeft(){
     base.tankTo(37);
 
     intakeLift.set_value(1);
-    chassis.moveToPose(-47,0,180,1200,{.earlyExitRange = 3});
-    chassis.moveToPose(-47,15,180,1200,{.forwards = false, .earlyExitRange = 3});
+    chassis.moveToPose(-45.2,0,180,1200,{.earlyExitRange = 3});
+    chassis.moveToPose(-45.2,15,180,1200,{.forwards = false, .earlyExitRange = 3});
     intakeLift.set_value(0);
 
 
@@ -843,22 +935,23 @@ void blueRight(){
     setIntakeState(1);
 
     base.tankTo(-172);
-    chassis.moveToPose(-6,-56,180,2000,{.maxSpeed = 60, .earlyExitRange = 3},false);
+    chassis.moveToPose(-6,-58,180,2000,{.maxSpeed = 60},false);
     chassis.moveToPose(-24,-24,135,1500,{.forwards=false, .lead = 0.6, .earlyExitRange = 3},true);
     base.tankTo(143);
     //chassis.moveToPose(-24,50,0,1500,{});
     chassis.moveToPose(-24,-50,180,2000,{.minSpeed = 50,.earlyExitRange=3}, false);
     chassis.moveToPose(-24,-20,180,2000,{.forwards = false, .minSpeed = 50, .earlyExitRange=3}, false);
     //base.tankTo(-53);
-    chassis.moveToPose(-68,-72,225,2000,{.lead = 0.6, .minSpeed = 100},false);
+    chassis.moveToPose(-68,-75,225,2000,{.lead = 0.6, .minSpeed = 100},false);
     pros::delay(200);
 
     setMechState(0);
-    chassis.moveToPose(-48,-24,180,2000,{.forwards=false, .minSpeed = 70 });
+    chassis.moveToPose(-48,-24,180,2000,{.forwards=false, .minSpeed = 70 }, false);
     base.tankTo(-37,true);
     intakeLift.set_value(1);
-    chassis.moveToPose(-48,-3,0,1500,{.minSpeed = 30, .earlyExitRange = 2});
-    chassis.moveToPose(-48,-15,0,1500,{.forwards = false, .minSpeed = 30, .earlyExitRange = 2});
+    chassis.moveToPose(-48,0,0,1500,{.minSpeed = 30});
+    chassis.moveToPose(-48,-15,0,1500,{.forwards = false, .minSpeed = 30, .earlyExitRange = 1});
+    intakeLift.set_value(0);
 
 
     chassis.moveToPose(-20,-5,70,1000,{}, false);
@@ -925,12 +1018,12 @@ void AWPRed(){
     
     setMechState(3);
     pros::delay(500);
-    ls.move_voltage(-4000);
-    rs.move_voltage(-4000);
+    ls.move_voltage(-6000);
+    rs.move_voltage(-6000);
     pros::delay(250);
     ls.move_voltage(0);
     ls.move_voltage(0);
-    chassis.moveToPose(-20,24,255,1500,{.forwards=false, .maxSpeed = 80},true);
+    chassis.moveToPose(-20,25,255,1500,{.forwards=false, .maxSpeed = 80},true);
     chassis.waitUntil(20);
     setMechState(0);
     chassis.waitUntil(36);
@@ -939,7 +1032,7 @@ void AWPRed(){
     setIntakeState(1);
 
     base.tankTo(-188);
-    chassis.moveToPose(-5,56,0,2000,{.maxSpeed = 60, .minSpeed=10},false);
+    chassis.moveToPose(-5,60,0,2000,{.maxSpeed = 60, .minSpeed=10},false);
     chassis.moveToPose(-24,24,45,1500,{.forwards=false, .lead = 0.6, .minSpeed = 40},true);
     base.tankTo(-143);
     //chassis.moveToPose(-24,50,0,1500,{});
@@ -951,17 +1044,31 @@ void AWPRed(){
     setIntakeState(7);
 
     chassis.moveToPose(-48,-24,180,5000,{.maxSpeed = 60, .minSpeed = 30, .earlyExitRange = 3},false);
-
+    
 
     base.tankTo(-53,true);
-    chassis.moveToPose(-22,-24,270,2000,{.forwards = false}, true);
-    chassis.waitUntil(22);
+    chassis.moveToPose(-20,-24,270,2000,{.forwards = false, .maxSpeed = 60, .minSpeed = 20}, true);
+    chassis.waitUntil(28);
     goalClamp.set_value(1);
     chassis.waitUntilDone();
+
+
+    
+
+    pros::delay(250);
+
     setIntakeState(1);
+     
+    pros::delay(450);
+    
     base.tankTo(37,true);
-    chassis.moveToPose(-24,-48,180,1500,{.minSpeed = 50, .earlyExitRange = 3});
-    chassis.moveToPose(-27,-23,135, 1200, {.forwards = false, .minSpeed = 50, .earlyExitRange = 3});
+    
+
+    chassis.moveToPose(-24,-48,180,1500,{.minSpeed = 50, .earlyExitRange = 3}, true);
+    chassis.waitUntil(0.1);
+    setIntakeState(1);
+    chassis.waitUntilDone();
+    chassis.moveToPose(-24,-27,135, 1200, {.forwards = false, .minSpeed = 50});
     base.tankTo(180);
     setMechState(5);
 
@@ -991,7 +1098,7 @@ void AWPBlue(){
     setIntakeState(1);
 
     base.tankTo(-172);
-    chassis.moveToPose(-5,-56,180,2000,{.maxSpeed = 60, .earlyExitRange = 3 },false);
+    chassis.moveToPose(-8,-60,180,2000,{.maxSpeed = 60},false);
     chassis.moveToPose(-24,-24,135,1500,{.forwards=false, .lead = 0.6, .minSpeed = 40},true);
     base.tankTo(143);
     //chassis.moveToPose(-24,50,0,1500,{});
@@ -1016,8 +1123,11 @@ void AWPBlue(){
 
     base.tankTo(-37,true);
 
+    
+    chassis.moveToPose(-20,50,0,1500,{.minSpeed = 60, .earlyExitRange = 3}, true);
+    chassis.waitUntil(1);
     setIntakeState(1);
-    chassis.moveToPose(-20,50,0,1500,{.minSpeed = 60, .earlyExitRange = 3});
+    chassis.waitUntilDone();
     chassis.moveToPose(-20,25,0,1500,{.forwards=false,.minSpeed=40});
     setMechState(7);
     base.tankTo(180,true);

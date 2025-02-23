@@ -53,10 +53,13 @@ double hs_kD;
 void setMechState(int number){
     mechState = number;
 }
+
+double derivative;
+double lb_integral = 0;
 double error;
 double prevError;
 
-vector<double> hsStates = {-6, 26, 130, 180, 140, 170, 105, 120, 200};
+vector<double> hsStates = {-6, 30, 150, 195, 140, 170, 105, 120, 200};
 
 
 double hsTick;
@@ -105,20 +108,21 @@ void ladyBrown(){
 
 
             error = currentPosition - hsStates[mechState];
-            double derivative = error - prevError;
+            lb_integral += error;
+            derivative = error - prevError;
 
         
-            hs_kP = 0.14;
-            
+            hs_kP = 0.2;
+        
 
-            hs_kD = 0.15;
+            hs_kD = 0.9;
             /*
             if(mechState == 1) {
                 hs_kP = 0.3;
                 hs_kD = 0.25;
             }*/
 
-            double output = hs_kP*error + hs_kD*derivative;
+            double output = hs_kP*error+ hs_kD*derivative;
 
             /*
             if(mechState==2 || mechState==0){
@@ -154,8 +158,8 @@ void ladyBrown(){
 int ticksPerRev = 2588;
 int tick;
 int prevTick;
-vector<int> hooksPositionsSensor = {0,642,1279,1905};
-vector<int> hooksPositionsEject = {546,1184,1824,2449};
+vector<int> hooksPositionsSensor = {0,857,1710};
+vector<int> hooksPositionsEject = {555,1418,2292};
 vector<bool> ringToEject = {false,false,false,false};
 
 bool intakeFourState = false;
@@ -167,6 +171,10 @@ void setSortState(int state){
 }
 
 bool intakeOnePrimed = true;
+
+
+double rpm;
+double prevrpm;
 
 //blue: 180 - 240
 //red: 330 - 30
@@ -188,13 +196,13 @@ void sort(){
         double colorValue = color.get_hue();
 
         
-
+        rpm = intakeTwo.get_actual_velocity();
 
 
 
 
         if(sortState==1){
-            if(colorValue > 200 && colorValue < 240){
+            if((colorValue > 200 && colorValue < 240) && distRing.get_distance()<55){
                 double smallestDiff = ticksPerRev;
                 int smallestIndex = 0;
                 for(int i = 0; i < hooksPositionsSensor.size(); i++){
@@ -211,7 +219,7 @@ void sort(){
             }
         }
         else if(sortState==2){
-            if(colorValue > 344 || colorValue < 15){
+            if((colorValue > 344 || colorValue < 15) && distRing.get_distance()<55){
                 double smallestDiff = ticksPerRev;
                 int smallestIndex = 0;
                 for(int i = 0; i < hooksPositionsSensor.size(); i++){
@@ -234,11 +242,6 @@ void sort(){
 
 
 
-        for(int ia = 0 ; ia<4; ia++){
-            if(ringToEject[ia]){
-                ringToEject[(ia+1)%4] = false;
-            }
-        }
 
         if(intakeToggle == false){
 
@@ -249,12 +252,12 @@ void sort(){
                     for(int i = 0; i<hooksPositionsEject.size(); i++){
                         
                         if(ringToEject[i]){
-                            double diffToEject = fabs(tick - hooksPositionsEject[i]-120); //delay 105ticks
+                            double diffToEject = fabs(tick - hooksPositionsEject[i]-105); //delay 105ticks
                             diffToEject = min(diffToEject, ticksPerRev-diffToEject);
                             if(diffToEject<50){
                                 intakeOne.move_voltage(12000);
                                 intakeTwo.move_voltage(-12000);
-                                pros::delay(300);
+                                pros::delay(150);
                                 intakeOne.move_voltage(12000);
                                 intakeTwo.move_voltage(12000);
                                 ringToEject[i] = false;
@@ -264,8 +267,12 @@ void sort(){
                     }
                 }
 
-                if(mechState==1 && auton){
-                    if(intakeTwo.get_actual_velocity()<2 && intakeOnePrimed){
+                if(mechState==1){
+                    if(intakeTwo.get_actual_velocity()<5 && intakeOnePrimed && (rpm - prevrpm < 0) && auton){
+                        intakeTwo.move_voltage(1200000);
+                        pros::delay(150);
+                        intakeTwo.move_voltage(-2000);
+                        pros::delay(100);
                         intakeTwo.move_voltage(1200000);
                         pros::delay(150);
                         intakeTwo.move_voltage(-2000);
@@ -281,7 +288,13 @@ void sort(){
                     intakeOne.move_voltage(20000);
                     intakeTwo.move_voltage(1200000);
                 }
-
+                /*
+                if(intakeTwo.get_actual_velocity()<5){
+                    intakeTwo.move_voltage(-12000);
+                    pros::delay(500);
+                    intakeTwo.move_voltage(12000);
+                }
+                */
             }
             else if((!controller.get_digital(DIGITAL_R2) && controller.get_digital(DIGITAL_R1))  || intakeState == 2){
                 intakeOne.move_voltage(-12000);
@@ -304,7 +317,7 @@ void sort(){
                 intakeTwo.move_voltage(12000);
                 intakeOnePrimed = true;
             }
-            else if(intakeState == 6 || (!auton && mechState==2)){
+            else if(intakeState == 6 || (!auton && mechState==2 && hsAngle.get_angle()>8000)){
                 /*
                 int beginTime = pros::millis();
                 intakeOne.move_voltage(20000);
@@ -318,7 +331,7 @@ void sort(){
                 */
 
                 double colorVal = color.get_hue();
-                if((colorVal>210 && colorVal<230) || (colorVal>350 || colorVal<10)){
+                if(((colorVal>210 && colorVal<230) || (colorVal>350 || colorVal<10)) && distRing.get_distance()<100){
                     intakeOne.move_voltage(0);
                     intakeTwo.move_voltage(0);      
                 }
@@ -331,31 +344,35 @@ void sort(){
             }
             else if(intakeState == 7){
 
-                double colorVal = color.get_hue();
-                if(colorVal>350 || colorVal<10){
-                    intakeOne.move_voltage(0);
-                    intakeTwo.move_voltage(0);      
-                }
-                else{
-                    intakeOne.move_voltage(12000);
-                    intakeTwo.move_voltage(12000);
+                
+                if(!(mechState>1 && hsAngle.get_angle()>8000)){
+                    double colorVal = color.get_hue();
+                    if((colorVal>350 || colorVal<15)){
+                        intakeOne.move_voltage(0);
+                        intakeTwo.move_voltage(0);
+                    }
+                    else{
+                        intakeOne.move_voltage(12000);
+                        intakeTwo.move_voltage(12000);
+                    }
                 }
                 intakeOnePrimed = true;
      
             }
             else if(intakeState == 8){
+                if(!(mechState>1 && hsAngle.get_angle()>8000)){
 
-                double colorVal = color.get_hue();
-                if(colorVal>210 && colorVal<230){
-                    intakeOne.move_voltage(0);
-                    intakeTwo.move_voltage(0);      
+                    double colorVal = color.get_hue();
+                    if(colorVal>210 && colorVal<230){
+                        intakeOne.move_voltage(0);
+                        intakeTwo.move_voltage(0);      
+                    }
+                    else{
+                        intakeOne.move_voltage(12000);
+                        intakeTwo.move_voltage(12000);
+                    }
+                    intakeOnePrimed = true;
                 }
-                else{
-                    intakeOne.move_voltage(12000);
-                    intakeTwo.move_voltage(12000);
-                }
-                intakeOnePrimed = true;
-
             }            
             else if(intakeState==9){
                 intakeOne.move_voltage(12000);
@@ -366,11 +383,24 @@ void sort(){
                 intakeOnePrimed = true;
 
             }
-            else if(intakeState == 10){
+            else if(intakeState == 10 || controller.get_digital(DIGITAL_DOWN)){
                 intakeOne.move_voltage(0);
                 intakeTwo.move_voltage(3000);
                 intakeOnePrimed = true;
 
+            }
+            else if(intakeState==11){
+
+                if(fabs(intakeTwo.get_position()-200)>50){
+                    intakeOne.move_voltage(-12000);
+                    intakeTwo.move_voltage(-12000);
+                }
+                else{
+                    intakeOne.move_voltage(0);
+                    intakeTwo.move_voltage(0);
+                }
+
+                intakeOnePrimed = true;
             }
             else{
                 intakeOne.move_voltage(0);
@@ -399,7 +429,7 @@ void sort(){
         }
 
 
-        
+        prevrpm = rpm;
 
         pros::delay(10);
     }

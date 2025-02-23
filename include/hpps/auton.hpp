@@ -11,6 +11,7 @@ void AWPRed();
 void AWPBlue();
 void qualRedRight();
 void qualBlueLeft();
+void qualRedRightTanner();
 
 
 

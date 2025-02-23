@@ -27,3 +27,4 @@ extern pros::adi::DigitalOut intakeLift;
 
 extern pros::v5::Distance distY;
 extern pros::v5::Distance distX;
+extern pros::v5::Distance distRing;

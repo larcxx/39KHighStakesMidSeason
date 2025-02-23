@@ -15,7 +15,7 @@ pros::v5::Motor hs(19,pros::v5::MotorGears::red); // they haven't decided yet
 pros::v5::IMU i1(21);
 pros::v5::Rotation yOdomPod(17);
 pros::v5::Rotation xOdomPod(10);
-pros::v5::Rotation hsAngle(-13); // port 1 is just a holder value,
+pros::v5::Rotation hsAngle(-13);
 pros::v5::Optical color(4);
 
 
@@ -28,3 +28,5 @@ pros::adi::DigitalOut intakeLift('B');
 
 pros::v5::Distance distY(3);
 pros::v5::Distance distX(1);
+
+pros::v5::Distance distRing(11);
