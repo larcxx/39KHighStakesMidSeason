@@ -26,7 +26,7 @@ float PIDTWO::runLoop(float error) {
 PIDTWO drivePID(0.0026, 0.000007, 0.0025, 30.0, true);
 
 void DrivePID(double distance, int Timeout) {
-    chassis.setBrakeMode(pros::motor_brake_mode_e::E_MOTOR_BRAKE_HOLD);
+    chassis.setBrakeMode(pros::motor_brake_mode_e::E_MOTOR_BRAKE_HOLD); 
     int counter = 0;
     int curTime = pros::millis();
     int timeout = Timeout;
@@ -284,14 +284,14 @@ void skills(){
     setIntakeState(1);
     chassis.moveToPose(-40,50,270,1000,{.forwards = false, .minSpeed = 90},true);
     chassis.waitUntil(10);
-    doinker.set_value(1);
+    doinkerLeft.set_value(1);
     setIntakeState(1);
     chassis.waitUntilDone();
 
     base.tankTo(210, true, shortest, 20);
     base.tankTo(135, true);
 
-    doinker.set_value(0);
+    doinkerLeft.set_value(0);
 
     goalClamp.set_value(0);
 
@@ -465,11 +465,11 @@ void qualRedRight(){
     chassis.waitUntil(24);
     setIntakeState(0);
     chassis.waitUntilDone();
-    doinker.set_value(1);
+    doinkerLeftLeft.set_value(1);
     pros::delay(300);
 
     chassis.moveToPose(-24,-28,30,1500,{.forwards = false,.earlyExitRange = 1},false);
-    doinker.set_value(0);
+    doinkerLeftLeft.set_value(0);
     setIntakeState(1);
     chassis.moveToPose(-24,-12,0,1500,{.minSpeed = 30, .earlyExitRange = 1});
     */
@@ -516,14 +516,14 @@ void qualRedRightTanner(){
     base.tankTo(-120);
     goalClamp.set_value(0);
 
-    chassis.moveToPose(-5, -61, 90, 2000, {.maxSpeed = 80},false);
+    chassis.moveToPose(-5, -63, 90, 2000, {.maxSpeed = 80},false);
 
-    doinker.set_value(1);
+    doinkerLeft.set_value(1);
     pros::delay(200);
 
-    chassis.moveToPose(-48, -61, 90, 200, {.forwards = false, .minSpeed = 90}, false);
+    chassis.moveToPose(-48, -63, 90, 200, {.forwards = false, .minSpeed = 90}, false);
 
-    doinker.set_value(0);
+    doinkerLeft.set_value(0);
 
     pros::delay(200);
     base.tankTo(53);
@@ -538,11 +538,11 @@ void qualRedRightTanner(){
     chassis.waitUntil(24);
     setIntakeState(0);
     chassis.waitUntilDone();
-    doinker.set_value(1);
+    doinkerLeft.set_value(1);
     pros::delay(300);
 
     chassis.moveToPose(-24,-28,30,1500,{.forwards = false,.earlyExitRange = 1},false);
-    doinker.set_value(0);
+    doinkerLeft.set_value(0);
     setIntakeState(1);
     chassis.moveToPose(-24,-12,0,1500,{.minSpeed = 30, .earlyExitRange = 1});
     */
@@ -555,7 +555,7 @@ void redRight(){
     chassis.setPose(49,60,270);
     chassis.moveToPose(15,57.5,260,2000,{.lead=0.23,.minSpeed=200},true);
     chassis.waitUntil(90);
-    doinker.set_value(1);
+    doinkerLeft.set_value(1);
     chassis.waitUntilDone();
 
 
@@ -563,7 +563,7 @@ void redRight(){
     chassis.waitUntil(40);
     chassis.waitUntilDone();
 
-    doinker.set_value(0);
+    doinkerLeft.set_value(0);
     pros::delay(250);
 
     base.tankTo(-170);
@@ -601,13 +601,13 @@ void redRight(){
     setIntakeState(3);
     chassis.moveToPose(17,47,290,2000,{.minSpeed=200},true);
     chassis.waitUntil(40);
-    doinker.set_value(1);
+    doinkerLeft.set_value(1);
     chassis.waitUntilDone();
 
 
     chassis.moveToPose(48,36,290,2000,{.forwards=false, .minSpeed = 60},true);
     chassis.waitUntil(15);
-    doinker.set_value(0);
+    doinkerLeft.set_value(0);
     chassis.waitUntilDone();
 
     setIntakeState(0);
@@ -664,13 +664,13 @@ void redRightElim(){
     setIntakeState(3);
     chassis.moveToPose(17,47,290,2000,{.minSpeed=200},true);
     chassis.waitUntil(40);
-    doinker.set_value(1);
+    doinkerLeft.set_value(1);
     chassis.waitUntilDone();
 
 
     chassis.moveToPose(48,36,290,2000,{.forwards=false, .minSpeed = 60},true);
     chassis.waitUntil(15);
-    doinker.set_value(0);
+    doinkerLeft.set_value(0);
     chassis.waitUntilDone();
 
     setIntakeState(0);
@@ -752,13 +752,13 @@ void blueLeft(){
     setIntakeState(3);
     chassis.moveToPose(17,-49,290,2000,{.minSpeed=200},true);
     chassis.waitUntil(40);
-    doinker.set_value(1);
+    doinkerLeft.set_value(1);
     chassis.waitUntilDone();
 
 
     chassis.moveToPose(31,-55,290,2000,{.forwards=false, .minSpeed = 60},false);
 
-    doinker.set_value(0);
+    doinkerLeft.set_value(0);
 
 
     pros::delay(400);
@@ -811,7 +811,7 @@ void blueLeft(){
     chassis.setPose(49,-36,270);
     chassis.moveToPose(15,-38.5,260,2000,{.lead=0.23,.minSpeed=200},true);
     chassis.waitUntil(90);
-    doinker.set_value(1);
+    doinkerLeft.set_value(1);
     chassis.waitUntilDone();
 
 
@@ -823,7 +823,7 @@ void blueLeft(){
     chassis.waitUntil(40);
     chassis.waitUntilDone();
 
-    doinker.set_value(0);
+    doinkerLeft.set_value(0);
     pros::delay(250);
 
     base.tankTo(-170);
@@ -863,13 +863,13 @@ void blueLeftElim(){
     setIntakeState(3);
     chassis.moveToPose(17,-49,290,2000,{.minSpeed=200},true);
     chassis.waitUntil(40);
-    doinker.set_value(1);
+    doinkerLeft.set_value(1);
     chassis.waitUntilDone();
 
 
     chassis.moveToPose(31,-55,290,2000,{.forwards=false, .minSpeed = 60},false);
 
-    doinker.set_value(0);
+    doinkerLeft.set_value(0);
 
 
     pros::delay(400);

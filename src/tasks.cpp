@@ -185,7 +185,7 @@ void sort(){
 
 
 
-        tick = intakeTwo.get_position();
+        tick = intake.get_position();
         tick = fmod(tick,ticksPerRev);
         
         if(tick<0) tick+=ticksPerRev;
@@ -196,13 +196,13 @@ void sort(){
         double colorValue = color.get_hue();
 
         
-        rpm = intakeTwo.get_actual_velocity();
+        rpm = intake.get_actual_velocity();
 
 
 
 
         if(sortState==1){
-            if((colorValue > 200 && colorValue < 240) && distRing.get_distance()<55){
+            if((colorValue > 200 && colorValue < 240)){
                 double smallestDiff = ticksPerRev;
                 int smallestIndex = 0;
                 for(int i = 0; i < hooksPositionsSensor.size(); i++){
@@ -219,7 +219,7 @@ void sort(){
             }
         }
         else if(sortState==2){
-            if((colorValue > 344 || colorValue < 15) && distRing.get_distance()<55){
+            if((colorValue > 344 || colorValue < 15) ){
                 double smallestDiff = ticksPerRev;
                 int smallestIndex = 0;
                 for(int i = 0; i < hooksPositionsSensor.size(); i++){
@@ -247,7 +247,7 @@ void sort(){
 
             if((controller.get_digital(DIGITAL_R2) && !controller.get_digital(DIGITAL_R1)) || intakeState == 1){
                 intakeFourState = true;
-                 
+                /*
                 if(sortState!=0){
                     for(int i = 0; i<hooksPositionsEject.size(); i++){
                         
@@ -255,66 +255,40 @@ void sort(){
                             double diffToEject = fabs(tick - hooksPositionsEject[i]-105); //delay 105ticks
                             diffToEject = min(diffToEject, ticksPerRev-diffToEject);
                             if(diffToEject<50){
-                                intakeOne.move_voltage(12000);
-                                intakeTwo.move_voltage(-12000);
+                                intake.move_voltage(-12000);
                                 pros::delay(150);
-                                intakeOne.move_voltage(12000);
-                                intakeTwo.move_voltage(12000);
+                                intake.move_voltage(12000);
                                 ringToEject[i] = false;
                             }
                         }
                         
                     }
-                }
-
+                }*/
+                
                 if(mechState==1){
-                    if(intakeTwo.get_actual_velocity()<5 && intakeOnePrimed && (rpm - prevrpm < 0) && auton){
-                        intakeTwo.move_voltage(1200000);
+                    if(intake.get_actual_velocity()<5 && intakeOnePrimed && (rpm - prevrpm < 0) && auton){
+                        intake.move_voltage(1200000);
                         pros::delay(150);
-                        intakeTwo.move_voltage(-2000);
+                        intake.move_voltage(-2000);
                         pros::delay(100);
-                        intakeTwo.move_voltage(1200000);
+                        intake.move_voltage(1200000);
                         pros::delay(150);
-                        intakeTwo.move_voltage(-2000);
+                        intake.move_voltage(-2000);
                         pros::delay(100);
                         intakeOnePrimed = false;
                     }
                     else{
-                        intakeOne.move_voltage(20000);
-                        intakeTwo.move_voltage(1200000);       
+                        intake.move_voltage(12000);
                     }
                 }
                 else{
-                    intakeOne.move_voltage(20000);
-                    intakeTwo.move_voltage(1200000);
+                    intake.move_voltage(12000);
                 }
-                /*
-                if(intakeTwo.get_actual_velocity()<5){
-                    intakeTwo.move_voltage(-12000);
-                    pros::delay(500);
-                    intakeTwo.move_voltage(12000);
-                }
-                */
+                
+                
             }
             else if((!controller.get_digital(DIGITAL_R2) && controller.get_digital(DIGITAL_R1))  || intakeState == 2){
-                intakeOne.move_voltage(-12000);
-                intakeTwo.move_voltage(-12000);
-                intakeOnePrimed = true;
-
-            }
-            else if(intakeState == 3){
-                intakeOne.move_voltage(12000);
-                intakeTwo.move_voltage(0);
-                intakeOnePrimed = true;
-            }
-            else if(intakeState == 4){
-                intakeOne.move_voltage(0);
-                intakeTwo.move_voltage(-12000);
-                intakeOnePrimed = true;
-            }
-            else if(intakeState == 5){
-                intakeOne.move_voltage(0);
-                intakeTwo.move_voltage(12000);
+                intake.move_voltage(-12000);
                 intakeOnePrimed = true;
             }
             else if(intakeState == 6 || (!auton && mechState==2 && hsAngle.get_angle()>8000)){
@@ -331,29 +305,23 @@ void sort(){
                 */
 
                 double colorVal = color.get_hue();
-                if(((colorVal>210 && colorVal<230) || (colorVal>350 || colorVal<10)) && distRing.get_distance()<100){
-                    intakeOne.move_voltage(0);
-                    intakeTwo.move_voltage(0);      
+                if(((colorVal>210 && colorVal<230) || (colorVal>350 || colorVal<10))){
+                    intake.move_voltage(0);  
                 }
                 else{
-                    intakeOne.move_voltage(12000);
-                    intakeTwo.move_voltage(12000);
+                    intake.move_voltage(12000);
                 }
                 intakeOnePrimed = true;
    
             }
             else if(intakeState == 7){
-
-                
                 if(!(mechState>1 && hsAngle.get_angle()>8000)){
                     double colorVal = color.get_hue();
                     if((colorVal>350 || colorVal<15)){
-                        intakeOne.move_voltage(0);
-                        intakeTwo.move_voltage(0);
+                        intake.move_voltage(0);
                     }
                     else{
-                        intakeOne.move_voltage(12000);
-                        intakeTwo.move_voltage(12000);
+                        intake.move_voltage(12000);
                     }
                 }
                 intakeOnePrimed = true;
@@ -364,68 +332,38 @@ void sort(){
 
                     double colorVal = color.get_hue();
                     if(colorVal>210 && colorVal<230){
-                        intakeOne.move_voltage(0);
-                        intakeTwo.move_voltage(0);      
+                        intake.move_voltage(0);      
                     }
                     else{
-                        intakeOne.move_voltage(12000);
-                        intakeTwo.move_voltage(12000);
+                        intake.move_voltage(12000);
                     }
                     intakeOnePrimed = true;
                 }
-            }            
-            else if(intakeState==9){
-                intakeOne.move_voltage(12000);
-                intakeTwo.move_voltage(12000);
-                pros::delay(200);
-                intakeTwo.move_voltage(0);
-                pros::delay(50);
-                intakeOnePrimed = true;
-
             }
             else if(intakeState == 10 || controller.get_digital(DIGITAL_DOWN)){
-                intakeOne.move_voltage(0);
-                intakeTwo.move_voltage(3000);
+                intake.move_voltage(3000);
                 intakeOnePrimed = true;
-
             }
             else if(intakeState==11){
 
-                if(fabs(intakeTwo.get_position()-200)>50){
-                    intakeOne.move_voltage(-12000);
-                    intakeTwo.move_voltage(-12000);
+                if(fabs(intake.get_position()-200)>50){
+                    intake.move_voltage(-12000);
                 }
                 else{
-                    intakeOne.move_voltage(0);
-                    intakeTwo.move_voltage(0);
+                    intake.move_voltage(0);
                 }
 
                 intakeOnePrimed = true;
             }
             else{
-                intakeOne.move_voltage(0);
-                intakeTwo.move_voltage(0);
+                intake.move_voltage(0);
                 intakeOnePrimed = true;
 
             }
-
-            /*
-            if(intakeOne.get_voltage()>2000 && intakeOne.get_actual_velocity()<50){
-                intakeOne.move_voltage(-12000);
-                pros::delay(100);
-                intakeOne.move_voltage(12000);
-            }
-            if(intakeTwo.get_voltage()>2000 && intakeTwo.get_actual_velocity()<50){
-                intakeTwo.move_voltage(-12000);
-                pros::delay(100);
-                intakeTwo.move_voltage(12000);
-            }
-            */
-            
         }
+
         else{
-            intakeOne.move_voltage(0);
-            intakeTwo.move_voltage(0);
+            intake.move_voltage(0);
         }
 
 
@@ -433,18 +371,4 @@ void sort(){
 
         pros::delay(10);
     }
-}
-
-
-int returnSortStateOne(){
-    return ringToEject[0];
-}
-int returnSortStateTwo(){
-    return ringToEject[1];
-}
-int returnSortStateThree(){
-    return ringToEject[2];
-}
-int returnSortStateFour(){
-    return ringToEject[3];
 }

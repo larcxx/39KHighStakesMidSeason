@@ -5,8 +5,7 @@
 extern pros::v5::MotorGroup ls;
 extern pros::v5::MotorGroup rs;
 
-extern pros::v5::Motor intakeOne;
-extern pros::v5::Motor intakeTwo;
+extern pros::v5::Motor intake;
 extern pros::v5::Motor hs;
 
 extern pros::v5::IMU i1;
@@ -21,10 +20,10 @@ extern pros::adi::DigitalOut goalClamp;
 
 extern pros::v5::Controller controller;
 
-extern pros::adi::DigitalOut doinker;
+extern pros::adi::DigitalOut doinkerRight;
+extern pros::adi::DigitalOut doinkerLeft;
 
 extern pros::adi::DigitalOut intakeLift;
 
 extern pros::v5::Distance distY;
 extern pros::v5::Distance distX;
-extern pros::v5::Distance distRing;
