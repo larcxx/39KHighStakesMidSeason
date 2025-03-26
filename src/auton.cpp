@@ -1,10 +1,13 @@
 #include "main.h"
 #include <vector>
 
-PIDTWO::PIDTWO(double kP, double kI, double kD, double windupRange, bool signFlipReset) {
+PIDTWO::PIDTWO(double kP, double kI, double kD, double skP, double skI, double skD, double windupRange, bool signFlipReset) {
     this->kP = kP;
     this->kI = kI;
     this->kD = kD;
+    this->skP = skP;
+    this->skI = skI;
+    this->skD = skD;
     this->windupRange = windupRange;
     this->signFlipReset = signFlipReset;
 }
@@ -23,7 +26,7 @@ float PIDTWO::runLoop(float error) {
     return output;
 }
 
-PIDTWO drivePID(0.0026, 0.000007, 0.0025, 30.0, true);
+PIDTWO drivePID(0.0026, 0.000000, 0.0000, 0, 0, 0, 30.0, true);
 
 void DrivePID(double distance, int Timeout) {
     chassis.setBrakeMode(pros::motor_brake_mode_e::E_MOTOR_BRAKE_HOLD); 
@@ -47,6 +50,7 @@ void DrivePID(double distance, int Timeout) {
         if(counter == 30) {
             break;
         }
+
         currentRotation = (yOdomPod.get_position());
         error = (targetRotation - currentRotation);
         ls.move_velocity(drivePID.runLoop(error));
@@ -313,10 +317,12 @@ void skills(){
 
 }
 
+
+ASSET(redLeftGrabGoal_txt);
 void redLeft(){
-    chassis.setPose(-58.33,13.23,217);
+    chassis.setPose(-60.39,13.84,216);
     setMechState(3);
-    pros::delay(500);
+    pros::delay(400);
     /*
     ls.move_voltage(-6000);
     rs.move_voltage(-6000);
@@ -324,33 +330,52 @@ void redLeft(){
     ls.move_voltage(0);
     ls.move_voltage(0);
     */
-    chassis.moveToPose(-20,24,270,2500,{.forwards=false, .lead = 0.7, .maxSpeed = 80},true);
+    chassis.follow(redLeftGrabGoal_txt,8,3000,false,true);
+    //chassis.moveToPose(-24,24,270,2500,{.forwards=false, .horizontalDrift = 1.5, .lead = 0.7, .maxSpeed = 80, .minSpeed = 50},true);
     chassis.waitUntil(20);
     setMechState(0);
-    chassis.waitUntil(45);
+    chassis.waitUntil(40);
     goalClamp.set_value(1);
     chassis.waitUntilDone();
     setIntakeState(1);
 
-    base.tankTo(-188);
-    chassis.moveToPose(-8,60,0,2000,{.maxSpeed = 60},false);
+    base.tankTo(-188, true);
+    chassis.moveToPose(-7,55,0,2000,{.maxSpeed = 60},false);
 
-    chassis.moveToPose(-24,24,45,1500,{.forwards=false, .lead = 0.6, .minSpeed = 40},false);
-    setIntakeState(0);
-    base.tankTo(-143);
+    chassis.moveToPose(-24,33,90,1500,{.forwards=false, .lead = 0.4, .minSpeed = 40},false);
+    //setIntakeState(0);
+    base.tankTo(-143,true);
     setIntakeState(1);
     //chassis.moveToPose(-24,50,0,1500,{});
     chassis.moveToPose(-24,50,0,2000,{.minSpeed = 70,.earlyExitRange=3}, false);
-    chassis.moveToPose(-75,68,270,1500,{.lead = 0.2, .minSpeed = 100},false);
+    chassis.moveToPose(-24,24,0,2000,{.forwards = false, .minSpeed = 50}, false);
+
+    base.tankTo(261);
+
+    chassis.moveToPose(-59,59,315,1500,{.earlyExitRange = 3},false);
+    chassis.moveToPose(-72,72,315,900,{.lead = 0.2, .maxSpeed = 40, .minSpeed = 40},false);
+
+    chassis.moveToPose(-59,59,315,700,{.forwards = false, .lead = 0.2, .minSpeed = 70},false);
+
+
+
+    intakeLift.set_value(1);
+
+    chassis.moveToPose(-72,72,315,700,{.lead = 0.2, .maxSpeed = 60, .minSpeed = 60},false);
+    intakeLift.set_value(0);
+
+
+
 
     setMechState(0);
-    chassis.moveToPose(-46.5,24,0,2000,{.forwards=false, .minSpeed = 45, .earlyExitRange = 3}); 
+    chassis.moveToPose(-48,24,0,2000,{.forwards=false, .minSpeed = 40},false); 
     intakeLift.set_value(1);
     base.tankTo(37,true);
 
     
-    chassis.moveToPose(-47.8,0,180,1200,{.earlyExitRange = 3});
-    chassis.moveToPose(-47.8,15,180,1200,{.forwards = false, .earlyExitRange = 3});
+    chassis.moveToPose(-48,-2,180,1200,{.minSpeed = 50},false);
+    intakeLift.set_value(0);
+    chassis.moveToPose(-48,15,180,1200,{.forwards = false, .minSpeed = 40});
 
 
     chassis.moveToPose(-20,5,110,1000,{},false);
@@ -550,113 +575,147 @@ void qualRedRightTanner(){
 
 }
 
-void redRight(){
-    /* kalahari redright auton
-    chassis.setPose(49,60,270);
-    chassis.moveToPose(15,57.5,260,2000,{.lead=0.23,.minSpeed=200},true);
-    chassis.waitUntil(90);
-    doinkerLeft.set_value(1);
-    chassis.waitUntilDone();
-
-
-    chassis.moveToPose(24,64,270,2000,{.forwards = false,.lead=0.3, .minSpeed = 80},true);
-    chassis.waitUntil(40);
-    chassis.waitUntilDone();
-
-    doinkerLeft.set_value(0);
-    pros::delay(250);
-
-    base.tankTo(-170);
-    chassis.moveToPose(9,53,84,2000,{.forwards = false, .lead = 0.2, .maxSpeed = 50},true);
-    chassis.waitUntil(15);
+ASSET(goalSideMidR_txt);
+ASSET(redRightStack_txt);
+void sixRingRedRight(){
+    chassis.setPose(60,24,90);
+    
+    chassis.moveToPose(22, 24, 90, 2000, {.forwards = false, .maxSpeed = 70, .minSpeed = 30},true);
+    chassis.waitUntil(37);
     goalClamp.set_value(1);
     chassis.waitUntilDone();
 
-    setIntakeState(1);
-    pros::delay(200);
+    setIntakeState(0);
 
-    chassis.moveToPose(50,24,180,2000,{.horizontalDrift = 10, .lead = 0.4 , .minSpeed = 50},true);
-    chassis.waitUntil(20);
-    goalClamp.set_value(0);
+
+    
+    base.tankTo(235);
+
+    setIntakeState(1);
+
+    chassis.moveToPose(13,5.5,227,1500,{.lead = 0.2},true);
+
+    chassis.waitUntil(4);
+    setIntakeState(0);
     chassis.waitUntilDone();
-    goalClamp.set_value(0);
-    pros::delay(100);
+    
+    doinkerRight.set_value(1);
+    pros::delay(50);
+
+    chassis.moveToPose(7,5,252,1000,{},false);
+    
+    
+    doinkerLeft.set_value(1);
+
+    pros::delay(50);
+
+    chassis.moveToPose(45,32,225,1500,{.forwards = false},false);
+
+
+
     base.tankTo(180);
-    chassis.moveToPose(13,20.5,90,2000,{.forwards=false, .maxSpeed = 70});
-    chassis.waitUntil(33);
-    goalClamp.set_value(1);
-    chassis.waitUntilDone();
-    setIntakeState(1);
 
-    base.tankTo(-60);
-    chassis.moveToPose(0,60,330,2000,{});
-    chassis.moveToPose(9,22,330,1500,{.forwards = false});
-    base.tankTo(45);
-
-    setMechState(5);
-    */
-
-
-    chassis.setPose(48,36,290);
-    setIntakeState(3);
-    chassis.moveToPose(17,47,290,2000,{.minSpeed=200},true);
-    chassis.waitUntil(40);
-    doinkerLeft.set_value(1);
-    chassis.waitUntilDone();
-
-
-    chassis.moveToPose(48,36,290,2000,{.forwards=false, .minSpeed = 60},true);
-    chassis.waitUntil(15);
     doinkerLeft.set_value(0);
+    doinkerRight.set_value(0);
+    pros::delay(200);
+    setIntakeState(1);
+
+
+    base.tankTo(-100);
+    chassis.swingToHeading(0,DriveSide::RIGHT,1200,{.direction = AngularDirection::CW_CLOCKWISE, .maxSpeed = 90, .minSpeed = 70});
+
+    chassis.moveToPose(22,50,0,2500,{.maxSpeed = 80, .minSpeed = 30});
+
+    chassis.moveToPose(48,24,315,2500,{.forwards = false, .minSpeed = 30});
+
+    base.tankTo(80, true);
+
+    
+    chassis.moveToPose(42.5,58,0,2000, {.lead = 0.5, .minSpeed=80},true);
+    chassis.waitUntil(15);
+    setIntakeState(2);
+    chassis.moveToPoint(42.5,51,1000, {.forwards = false});
+
+
+    setIntakeState(1);
+    base.tankTo(40);
+
+    setIntakeState(1);
+    chassis.moveToPose(67,81,45,1000, {.lead = 0.37, .maxSpeed = 90, .minSpeed = 90});
+
+    chassis.moveToPose(35,47,45,1000, {.forwards = false, .lead = 0.37, .minSpeed = 50});
+    chassis.moveToPose(57,69,45,1000, {.forwards = 1});
+}
+
+
+void sixRingBlueLeft(){
+    chassis.setPose(-60,24,270);
+    
+    chassis.moveToPose(-22, 24, 270, 2000, {.forwards = false, .maxSpeed = 70, .minSpeed = 30},true);
+    chassis.waitUntil(37);
+    goalClamp.set_value(1);
     chassis.waitUntilDone();
 
     setIntakeState(0);
 
-    
 
-    base.tankTo(-135 ,true);
-    chassis.moveToPose(20,23,60,2000,{.forwards =false, .maxSpeed = 70, .minSpeed = 20}, true);
-    chassis.waitUntil(26);
-    goalClamp.set_value(1);
-    chassis.waitUntilDone();
+    
+    base.tankTo(360-235);
 
     setIntakeState(1);
 
-    base.tankTo(200);
+    chassis.moveToPose(-13,5.5,133,1500,{.lead = 0.2},true);
 
-    chassis.moveToPose(63,60,15,1500,{.lead = 0.6, .minSpeed = 100});
-    chassis.moveToPose(65,75,0,1500,{.lead = 0.6, .minSpeed = 127});
-    chassis.moveToPose(55,60,35, 1000, {.forwards = false, .minSpeed = 50},false);
-
-    base.tankTo(140);
-    pros::delay(600);
-    goalClamp.set_value(0);
-    
-
-    chassis.moveToPose(48,40,180, 1200, {.minSpeed = 50});
-    base.tankTo(200);
-
-    chassis.moveToPose(10, 40,90, 2000, {.forwards = false, .maxSpeed = 80, .minSpeed = 20},true);
-    chassis.waitUntil(35);
-    goalClamp.set_value(1);
-    chassis.waitUntilDone();
-
-    chassis.moveToPose(22,22,135,2000, {.minSpeed = 50},false);
-
-    base.tankTo(65);
-    setMechState(5);
-
-
-    /*
-
-    chassis.moveToPose(24,24,45,1300,{.forwards = false},false);
-
+    chassis.waitUntil(4);
     setIntakeState(0);
+    chassis.waitUntilDone();
+    
+    doinkerRight.set_value(1);
+    pros::delay(50);
 
-    base.tankTo(65);
-    setMechState(5);
-    */
+    chassis.moveToPose(-7,5,108,1000,{},false);
+    
+    
+    doinkerLeft.set_value(1);
 
+    pros::delay(50);
+
+    chassis.moveToPose(-45,32,135,1500,{.forwards = false},false);
+
+
+
+    base.tankTo(180);
+
+    doinkerLeft.set_value(0);
+    doinkerRight.set_value(0);
+    pros::delay(200);
+    setIntakeState(1);
+
+
+    base.tankTo(100);
+    chassis.swingToHeading(0,DriveSide::LEFT,1200,{.direction = AngularDirection::CCW_COUNTERCLOCKWISE, .maxSpeed = 90, .minSpeed = 70});
+
+    chassis.moveToPose(-22,50,0,2500,{.maxSpeed = 80, .minSpeed = 30});
+
+    chassis.moveToPose(-48,24,45,2500,{.forwards = false, .minSpeed = 30});
+
+    base.tankTo(-80, true);
+
+    
+    chassis.moveToPose(-42.5,58,0,2000, {.lead = 0.5, .minSpeed=80},true);
+    chassis.waitUntil(15);
+    setIntakeState(2);
+    chassis.moveToPoint(-42.5,51,1000, {.forwards = false});
+
+
+    setIntakeState(1);
+    base.tankTo(-40);
+
+    setIntakeState(1);
+    chassis.moveToPose(-67,81,315,1000, {.lead = 0.37, .maxSpeed = 90, .minSpeed = 90});
+
+    chassis.moveToPose(-35,47,315,1000, {.forwards = false, .lead = 0.37, .minSpeed = 50});
+    chassis.moveToPose(-57,69,315,1000, {.forwards = 1});
 }
 
 void redRightElim(){
@@ -1137,9 +1196,10 @@ void AWPBlue(){
 }
 
 
-
-
-
+ASSET(circle_txt);
+void testingPID(){
+    chassis.turnToHeading(90,1000,{},0);
+}
 
 
 

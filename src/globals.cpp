@@ -23,9 +23,10 @@ pros::adi::DigitalOut goalClamp('A');
 
 pros::v5::Controller controller(pros::E_CONTROLLER_MASTER);
 
-pros::adi::DigitalOut doinkerLeft('G');
-pros::adi::DigitalOut doinkerRight('H');
-pros::adi::DigitalOut intakeLift('B');
+pros::adi::DigitalOut doinkerLeft('H');
+pros::adi::DigitalOut doinkerRight('B');
+
+pros::adi::DigitalOut intakeLift('C');
 
 pros::v5::Distance distY(9);
 pros::v5::Distance distX(8);

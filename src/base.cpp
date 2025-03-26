@@ -73,7 +73,7 @@ double Base::calcDist(double targetHeading, double currentHeading, turnDir t) {
 }
 
 
-void Base::tankTo(double targetAngle, bool chain, turnDir t, double out) {
+void Base::tankTo(double targetAngle, bool chain,turnDir t, double out, double freezeState){ //freezeState = 1 stop left, 2, stop right
     double currentAngle = 360 - i1.get_heading();
     double tankError = calcDist(targetAngle, currentAngle, t);
     PID tankPID(tankError, tank_kP, tank_kI, tank_kD, tank_integralBound, tank_acceptedError, tank_timeLimit, tank_settledTimeLimit);
@@ -96,6 +96,53 @@ void Base::tankTo(double targetAngle, bool chain, turnDir t, double out) {
     ls.move_voltage(0);
     rs.move_voltage(0);
 }
+
+void Base::PivotToLeft(double targetAngle, double ratio){ //freezeState = 1 stop left, 2, stop right
+    double currentAngle = 360 - i1.get_heading();
+    double tankError = calcDist(targetAngle, currentAngle, shortest);
+    PID tankPID(tankError, tank_kP, tank_kI, tank_kD, tank_integralBound, tank_acceptedError, tank_timeLimit, tank_settledTimeLimit);
+    while(!tankPID.isSettled()) {
+        currentAngle = 360 - i1.get_heading();
+
+        tankError = calcDist(targetAngle, currentAngle, shortest);
+
+        double tankOutput = clamp(tankPID.calc(tankError), -tank_maxVolts, tank_maxVolts);
+
+        double leftPower = -tankOutput;
+        double rightPower = tankOutput;
+
+        ls.move_voltage(leftPower*1000);
+        rs.move_voltage(ratio*rightPower*1000);
+        std::cout << tankError << ", " << std::endl;
+        pros::delay(10);
+    }
+    ls.move_voltage(0);
+    rs.move_voltage(0);
+}
+void Base::PivotToRight(double targetAngle, double ratio){ //freezeState = 1 stop left, 2, stop right
+    double currentAngle = 360 - i1.get_heading();
+    double tankError = calcDist(targetAngle, currentAngle, shortest);
+    PID tankPID(tankError, tank_kP, tank_kI, tank_kD, tank_integralBound, tank_acceptedError, tank_timeLimit, tank_settledTimeLimit);
+    while(!tankPID.isSettled()) {
+        currentAngle = 360 - i1.get_heading();
+
+        tankError = calcDist(targetAngle, currentAngle, shortest);
+
+        double tankOutput = clamp(tankPID.calc(tankError), -tank_maxVolts, tank_maxVolts);
+
+        double leftPower = -tankOutput;
+        double rightPower = tankOutput;
+
+        ls.move_voltage(ratio*leftPower*1000);
+        rs.move_voltage(rightPower*1000);
+        std::cout << tankError << ", " << std::endl;
+        pros::delay(10);
+    }
+    ls.move_voltage(0);
+    rs.move_voltage(0);
+}
+
+
 
 void Base::pivotTo(double targetAngle, side s, turnDir t) {
     double currentAngle = 360 - i1.get_heading();

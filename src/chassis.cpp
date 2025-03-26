@@ -12,23 +12,23 @@ lemlib::Drivetrain drivetrain(&ls,
 
 //11.5/2 -4.45
 
-lemlib::TrackingWheel yPod(&yOdomPod, lemlib::Omniwheel::NEW_2, -0.65); // tune this value please
-lemlib::TrackingWheel xPod(&xOdomPod, lemlib::Omniwheel::NEW_2, -1.2);
+lemlib::TrackingWheel yPod(&yOdomPod, lemlib::Omniwheel::NEW_2, -0.75); // tune this value please
+lemlib::TrackingWheel xPod(&xOdomPod, lemlib::Omniwheel::NEW_2, -1.8);
 
 lemlib::OdomSensors sensors(&yPod, nullptr, &xPod, nullptr, &i1);
 
-lemlib::ControllerSettings lateral_controller(10, // proportional gain (kP)
-                                              0, // integral gain (kI)
-                                              3, // derivative gain (kD)
-                                              3, // anti windup
-                                              1, // small error range, in inches
-                                              100, // small error range timeout, in milliseconds
-                                              3, // large error range, in inches
-                                              500, // large error range timeout, in milliseconds
+lemlib::ControllerSettings lateral_controller(6, // proportional gain (kP)
+                                              0.02, // integral gain (kI)
+                                              15, // derivative gain (kD)
+                                              5, // anti windup
+                                              0.3, // small error range, in inches
+                                              200, // small error range timeout, in milliseconds
+                                              2, // large error range, in inches
+                                              700, // large error range timeout, in milliseconds
                                               20 // maximum acceleration (slew)
 );
 
-lemlib::ControllerSettings angular_controller(2, // proportional gain (kP)
+lemlib::ControllerSettings angular_controller(1.7, // proportional gain (kP)
                                               0, // integral gain (kI)
                                               10, // derivative gain (kD)
                                               3, // anti windup
