@@ -59,7 +59,7 @@ double lb_integral = 0;
 double error;
 double prevError;
 
-vector<double> hsStates = {-6, 31, 190, 195, 140, 170, 105, 120, 200};
+vector<double> hsStates = {0, 32, 180, 195, 140, 170, 105, 120, 200};
 
 
 double hsTick;
