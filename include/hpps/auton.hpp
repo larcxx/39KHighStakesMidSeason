@@ -13,6 +13,9 @@ void qualRedRight();
 void qualBlueLeft();
 void qualRedRightTanner();
 void testingPID();
+void sixRingRedLeftElim();
+void eightRingBlueRight();
+void rushPlusSixRingRedRight();
 
 
 class PIDTWO {

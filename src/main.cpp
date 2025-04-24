@@ -31,10 +31,10 @@ void screen() {
     	pros::lcd::print(2, "y: %f", pose.y); // print the y position
         pros::lcd::print(3, "heading: %f", pose.theta); // print the heading
 
-		pros::lcd::print(4, "intake temp: %f", hs.get_temperature()); // print the y position
+		//pros::lcd::print(4, "intake temp: %f", hs.get_temperature()); // print the y position
 		pros::lcd::print(5, "base temp: %f", (ls.get_temperature_all()[0] + ls.get_temperature_all()[1] + ls.get_temperature_all()[2] + rs.get_temperature_all()[0] + rs.get_temperature_all()[1] + rs.get_temperature_all()[2])/6);
-		pros::lcd::print(6, "intake ticks: %f", fmod(intake.get_position(), 2588));
-		pros::lcd::print(7, "hsAngle angle: %f", (float) hsAngle.get_angle()); // print the heading
+		//pros::lcd::print(6, "intake ticks: %f", fmod(intake.get_position(), 719.566667));
+		//pros::lcd::print(7, "hsAngle angle: %f", (float) hsAngle.get_angle()); // print the heading
 
         pros::delay(50);
 		
@@ -52,11 +52,12 @@ void initialize() {
 	pros::Task screenTask(screen);
 	pros::Task ladyBrownTask(ladyBrown);
 	pros::Task intakeTask(sort);
-	rs.set_brake_mode_all(pros::MotorBrake::coast);
-	ls.set_brake_mode_all(pros::MotorBrake::coast);
+	rs.set_brake_mode_all(pros::MotorBrake::brake);
+	ls.set_brake_mode_all(pros::MotorBrake::brake);
 	intake.set_brake_mode(pros::MotorBrake::coast);
 	hs.set_brake_mode(pros::MotorBrake::coast);
 	color.set_led_pwm(100);
+	colorTwo.set_led_pwm(100);
 	base.setDriveConstants(1.10, 0, 10, 0, 10.4, 1, 3500, 200);
 	base.setTankConstants(0.72, 0.008, 7.2, 7, 12, 3, 3000, 0); // TUNED W/ STL @ 200 
 	base.setPivotConstants(.37, 0, 1, 0, 12, /*LAST 3 VALS DONT MAKE DIFF; NEVER SETTLES */1, 1, 1);
@@ -92,11 +93,25 @@ void competition_initialize() {}
  * will be stopped. Re-enabling the robot will restart the task, not re-start it
  * from where it left off.
  */
+
+
+
 void autonomous() {
 	setAutonState(true);
+	//eightRingBlueRight();
 
-	sixRingBlueLeft();
+
+
+	pros::delay(60000);
+
 	//sixRingRedRight();
+	//rushPlusSixRingRedRight();
+	//sixRingBlueLeft();
+	//qualRedRight();
+	//qualBlueLeft();
+	//blueRight();
+	//redLeft();
+	//AWPBlue();
 	/*
 	switch(autonFunc){
 		case 0:
@@ -196,10 +211,9 @@ int currentMechState;
 
 
 void opcontrol() {
-	
 	setAdjustment(false);
-	rs.set_brake_mode_all(pros::MotorBrake::coast);
-	ls.set_brake_mode_all(pros::MotorBrake::coast);
+	setMechState(0);
+
 	while (true) {
 		setAutonState(false);
 		double left = controller.get_analog(ANALOG_LEFT_Y);    // Gets amount forward/backward from left joystick
@@ -232,7 +246,14 @@ void opcontrol() {
 		}
 
 
-
+		if(controller.get_digital(DIGITAL_L1)){
+			doinkerLeft.set_value(1);
+			doinkerRight.set_value(1);
+		}
+		else{
+			doinkerLeft.set_value(0);
+			doinkerRight.set_value(0);	
+		}
 
 		
 		if(!controller.get_digital(DIGITAL_L2)){
@@ -252,13 +273,11 @@ void opcontrol() {
 				doinkerRightState = false;
 			}
 		}
-
+		
 		if(controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_A)){
 			chooseSortState = (chooseSortState+1)%3;
 		}
-
-
-	
+		
 
 
 
@@ -266,7 +285,7 @@ void opcontrol() {
         
         doinkerLeft.set_value(doinkerLeftState);
 
-		doinkerRight.set_value(doinkerRightState);
+		//doinkerRight.set_value(doinkerRightState);
 
 		setSortState(chooseSortState);
 

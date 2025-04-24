@@ -17,6 +17,7 @@ pros::v5::Rotation yOdomPod(9);
 pros::v5::Rotation xOdomPod(8);
 pros::v5::Rotation hsAngle(10);
 pros::v5::Optical color(1);
+pros::v5::Optical colorTwo(19);
 
 
 pros::adi::DigitalOut goalClamp('A');

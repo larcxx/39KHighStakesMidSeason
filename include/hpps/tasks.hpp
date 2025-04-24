@@ -17,3 +17,5 @@ int returnSortStateFour();
 
 void setSortState(int state);
 int getMechState();
+
+void setEdgeState(int state);

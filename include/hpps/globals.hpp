@@ -15,6 +15,7 @@ extern pros::v5::Rotation xOdomPod;
 extern pros::v5::Rotation hsAngle;
 
 extern pros::v5::Optical color;
+extern pros::v5::Optical colorTwo;
 
 extern pros::adi::DigitalOut goalClamp;
 
