@@ -15,7 +15,7 @@ lemlib::Drivetrain drivetrain(&ls,
 lemlib::TrackingWheel yPod(&yOdomPod, lemlib::Omniwheel::NEW_2, -0.75); // tune this value please
 lemlib::TrackingWheel xPod(&xOdomPod, lemlib::Omniwheel::NEW_2, -1.8);
 
-lemlib::OdomSensors sensors(&yPod, nullptr, &xPod, nullptr, &i1);
+lemlib::OdomSensors sensors(&yPod, nullptr, nullptr, nullptr, &i1);
 
 lemlib::ControllerSettings lateral_controller(6, // proportional gain (kP)
                                               0.02, // integral gain (kI)

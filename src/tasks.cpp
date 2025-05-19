@@ -26,6 +26,7 @@ void setIntakeState(int state){
 
 
 
+
 bool intakeToggle = false;
 
 int mechState = 0; //0 = normal state, 1 = first ring, 2 = second ring, 3 = ram, 4 = push down
@@ -55,10 +56,14 @@ double lb_integral = 0;
 double error;
 double prevError;
 
-vector<double> hsStates = {0, 31.2, 50, 180, 195, 120, 170, 105, 120, 200};
+vector<double> hsStates = {0, 29.8, 50, 180, 195, 120, 170, 105, 120, 200, 140, 150};
 
 
 double hsTick;
+
+bool whatToSort;
+bool whatNotToSort;
+
 
 
 
@@ -88,13 +93,19 @@ void ladyBrown(){
         }
         else{
             if(controller.get_digital_new_press(DIGITAL_RIGHT)){
+                if(whatNotToSort && mechState==3){
+                    mechState == 1;               
+                }
                 mechState = (mechState+1)%4;
             }
             if(controller.get_digital_new_press(DIGITAL_LEFT)){
                 if(mechState!=9) mechState = 9;
                 else mechState = 0;
             }
-
+            if(controller.get_digital_new_press(DIGITAL_B)){
+                if(mechState!=11) mechState = 11;
+                else mechState = 1;
+            }
 
             error = currentPosition - hsStates[mechState];
             lb_integral += error;
@@ -173,10 +184,17 @@ bool waitTillRing = false;
 
 float prevOutput;
 
+
+int stuck = 0;
+
+int currentTime;
+int prevTime;
+
+
 void sort(){
     while(true){
 
-
+        currentTime = pros::millis();
 
         tick = intake.get_position();
         tick = fmod(tick,ticksPerRev);
@@ -207,18 +225,41 @@ void sort(){
                 bool red = ((colorValueOne > 330 || colorValueOne < 30) || (colorValueTwo > 330 || colorValueTwo < 30)) && (proximityOne>120 || proximityTwo>120);
                 bool blue = ((colorValueOne > 180 && colorValueOne < 270) || (colorValueTwo > 180 && colorValueTwo < 270)) && (proximityOne>120 || proximityTwo>120);   
 
+
+                if(sortState == 0){
+                    whatToSort = false;
+                    whatNotToSort = false;
+                }
+                else if(sortState == 1){
+                    whatToSort = blue;
+                    whatNotToSort = red;
+                }
+                else if(sortState == 2){
+                    whatToSort = red;
+                    whatNotToSort = blue;
+                }
+
+
                 intake.set_encoder_units(pros::E_MOTOR_ENCODER_DEGREES);
                 degree = intake.get_position();
-                float output = fmod(degree, 719.56666);
+                float output = fmod(degree, 719.7);
 
-                intake.move_voltage(12000);
 
-                if(red){
+
+                if(mechState==2 && whatNotToSort){
+                    intake.move_voltage(0);
+                }
+                else{
+                    intake.move_voltage(12000);
+                }
+                
+
+                if(whatToSort){
                     waitTillRing = true;
                 }
 
                 if(waitTillRing){
-                    if(output > 680 || output < 20){
+                    if(output > 295 && output < 356){ //291.415, 351
                         intake.move_voltage(-12000);
                         pros::delay(200);
                         intake.move_voltage(12000);
@@ -228,12 +269,47 @@ void sort(){
 
                 prevOutput = output;
 
+                /*
+                if(intake.get_voltage() > 0 && intake.get_actual_velocity() < 5){
+                    stuck += (currentTime-prevTime);
+                }
+                else{
+                    stuck = 0;
+                }
+
+
+                if(stuck>300){
+                    intake.move_voltage(-12000);
+                    pros::delay(200);
+                    intake.move_voltage(12000);
+                }*/
+
+
+                
+
             }
 
 
             else if((!controller.get_digital(DIGITAL_R2) && controller.get_digital(DIGITAL_R1))  || intakeState == 2){
                 intake.move_voltage(-12000);
                 intakeOnePrimed = true;
+            }
+
+            else if(intakeState==3){
+                intake.set_encoder_units(pros::E_MOTOR_ENCODER_DEGREES);
+                float output = fmod(intake.get_position(), 719.56666);
+                if(!(output>300 && output<400)){
+                    intake.move_voltage(12000);
+                }
+                else{
+                    intake.move_voltage(0);
+                }
+            }
+            else if(intakeState==4){
+                intake.move_voltage(3000);
+            }
+            else if(intakeState==5){
+                intake.move_voltage(-3000);
             }
 
 
@@ -305,6 +381,7 @@ void sort(){
 
 
         prevrpm = rpm;
+        prevTime = currentTime;
 
         
         pros::delay(10);
