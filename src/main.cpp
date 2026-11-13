@@ -27,15 +27,16 @@ void screen() {
 		
 		
         lemlib::Pose pose = chassis.getPose(); // get the current position of the robot
-        //pros::lcd::print(0, "x: %f", pose.x); // print the x position
-    	//pros::lcd::print(1, "y: %f", pose.y); // print the y position
-        //pros::lcd::print(2, "heading: %f", pose.theta); // print the heading
-		pros::lcd::print(3, "base temp: %f", (ls.get_temperature_all()[0] + ls.get_temperature_all()[1] + ls.get_temperature_all()[2] + rs.get_temperature_all()[0] + rs.get_temperature_all()[1] + rs.get_temperature_all()[2])/6);
-		pros::lcd::print(6, "intake ticks: %f", fmod(intake.get_position(), 719.585));
+        pros::lcd::print(1, "x: %f", pose.x); // print the x position
+    	pros::lcd::print(2, "y: %f", pose.y); // print the y position
+        pros::lcd::print(3, "heading: %f", pose.theta); // print the heading
+
+		//pros::lcd::print(4, "intake temp: %f", hs.get_temperature()); // print the y position
+		pros::lcd::print(5, "base temp: %f", (ls.get_temperature_all()[0] + ls.get_temperature_all()[1] + ls.get_temperature_all()[2] + rs.get_temperature_all()[0] + rs.get_temperature_all()[1] + rs.get_temperature_all()[2])/6);
+		//pros::lcd::print(6, "intake ticks: %f", fmod(intake.get_position(), 719.566667));
 		//pros::lcd::print(7, "hsAngle angle: %f", (float) hsAngle.get_angle()); // print the heading
 
-
-        pros::delay(200);
+        pros::delay(50);
 		
     }
 }
@@ -61,31 +62,6 @@ void initialize() {
 	base.setTankConstants(0.72, 0.008, 7.2, 7, 12, 3, 3000, 0); // TUNED W/ STL @ 200 
 	base.setPivotConstants(.37, 0, 1, 0, 12, /*LAST 3 VALS DONT MAKE DIFF; NEVER SETTLES */1, 1, 1);
 	selection();
-
-
-
-	double intakeTemp = intake.get_temperature();
-	if(intakeTemp == PROS_ERR_F){
-		pros::lcd::print(4, "intake not plugged in");
-	}
-	int32_t xrot = xOdomPod.get_position();
-	int32_t yrot = yOdomPod.get_position();
-
-	if(xrot == PROS_ERR || yrot == PROS_ERR){
-		pros::lcd::print(5, "odom not plugged in");
-	}
-
-	double tempdt = ls.get_temperature_all()[0] + ls.get_temperature_all()[1] + ls.get_temperature_all()[2] + rs.get_temperature_all()[0] + rs.get_temperature_all()[1] + rs.get_temperature_all()[2];
-
-	if(tempdt == PROS_ERR_F){
-		pros::lcd::print(6, "drive train not plugged in");
-	}
-
-	double templb = hs.get_temperature();
-
-	if(templb == PROS_ERR_F){
-		pros::lcd::print(7, "lady brown not plugged in");
-	}
 }
 
 /**
@@ -104,8 +80,7 @@ void disabled() {}
  * This task will exit when the robot is enabled and autonomous or opcontrol
  * starts.
  */
-void competition_initialize() {
-}
+void competition_initialize() {}
 
 /**
  * Runs the user autonomous code. This function will be started in its own task
@@ -124,15 +99,14 @@ void competition_initialize() {
 void autonomous() {
 	setAutonState(true);
 	//eightRingBlueRight();
-	sixRingRedRightElims();
-	//redLeft();
 
-	//pros::delay(60000);
+
+
+	pros::delay(60000);
 
 	//sixRingRedRight();
 	//rushPlusSixRingRedRight();
-	//sixRingBlueLeftElims();
-
+	//sixRingBlueLeft();
 	//qualRedRight();
 	//qualBlueLeft();
 	//blueRight();
@@ -224,7 +198,6 @@ double driveCurve(double input){
 
 bool clampPrimed = true;
 bool clampState = false;
-bool prevClampState;
 
 bool doinkerLeftPrimed = true;
 bool doinkerLeftState = false;
@@ -275,11 +248,11 @@ void opcontrol() {
 
 		if(controller.get_digital(DIGITAL_L1)){
 			doinkerLeft.set_value(1);
-			//doinkerRight.set_value(1);
+			doinkerRight.set_value(1);
 		}
 		else{
 			doinkerLeft.set_value(0);
-			//doinkerRight.set_value(0);	
+			doinkerRight.set_value(0);	
 		}
 
 		
@@ -288,25 +261,22 @@ void opcontrol() {
 				doinkerLeftState = !doinkerLeftState;
 			}
 			intakeLiftState = false;
-			//doinkerRightState = false;
+			doinkerRightState = false;
 		}
 		else if(controller.get_digital(DIGITAL_L2)){
 			if(controller.get_digital(DIGITAL_L1)){
 				intakeLiftState = true;
-				//doinkerRightState = true;
+				doinkerRightState = true;
 			}
 			else{
 				intakeLiftState = false;
-				//doinkerRightState = false;
+				doinkerRightState = false;
 			}
 		}
 		
 		if(controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_A)){
 			chooseSortState = (chooseSortState+1)%3;
 		}
-
-
-		
 		
 
 
@@ -320,13 +290,8 @@ void opcontrol() {
 		setSortState(chooseSortState);
 
 
-		if(prevClampState == false && clampState == true){
-			controller.rumble(".");
-		}
 
 
-
-		prevClampState = clampState;
 
 
 		pros::delay(10);

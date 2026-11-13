@@ -13,7 +13,7 @@ pros::v5::Motor hs(11,pros::v5::MotorGears::red);
 
 
 pros::v5::IMU i1(21);
-pros::v5::Rotation yOdomPod(-9);
+pros::v5::Rotation yOdomPod(9);
 pros::v5::Rotation xOdomPod(8);
 pros::v5::Rotation hsAngle(10);
 pros::v5::Optical color(1);

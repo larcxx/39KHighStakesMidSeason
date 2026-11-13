@@ -18,12 +18,6 @@ void eightRingBlueRight();
 void rushPlusSixRingRedRight();
 
 
-
-void sixRingRedRightElims();
-
-void sixRingBlueLeftElims();
-
-
 class PIDTWO {
     public:
         PIDTWO(double kP, double kI, double kD, double skP, double skI, double skD, double windupRange = 0, bool signFlipReset = false);
