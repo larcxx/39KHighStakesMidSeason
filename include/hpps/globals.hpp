@@ -26,7 +26,5 @@ extern pros::adi::DigitalOut doinkerLeft;
 
 extern pros::adi::DigitalOut intakeLift;
 
-extern pros::v5::Distance distRight;
-extern pros::v5::Distance distLeft;
-extern pros::v5::Distance distFront;
-extern pros::v5::Distance distBack;
+extern pros::v5::Distance distY;
+extern pros::v5::Distance distX;

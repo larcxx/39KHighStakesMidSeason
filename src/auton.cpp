@@ -237,7 +237,7 @@ void skills(){
 
     chassis.moveToPose(-72,-62,180,2500,{.lead = 0.3, .minSpeed = 50},false);
 
-    chassis.setPose(-63 + ( (float) distLeft.get_distance() / (float) 25.4), chassis.getPose().y, chassis.getPose().theta);
+    chassis.setPose(-63 + ( (float) distX.get_distance() / (float) 25.4), chassis.getPose().y, chassis.getPose().theta);
 
     chassis.moveToPose(-42,3,200,2000,{.forwards = false, .maxSpeed = 60, .minSpeed = 20}, true);
     chassis.waitUntil(54);
